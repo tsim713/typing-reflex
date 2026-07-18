@@ -1,0 +1,1190 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    min-height: 100vh; 
+    font-family: monospace; 
+    background: #111; 
+    color: white; 
+    margin: 0; 
+    padding: 20px 0;
+    box-sizing: border-box;
+  }
+  #setup-panel {
+    background: #1a1a1a;
+    padding: 30px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    width: 500px;
+    position: relative;
+    border: 1px solid #222;
+    text-align: center;
+  }
+  
+  /* Modular Overlay Panels */
+  .fullscreen-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 15, 15, 0.98);
+    box-sizing: border-box;
+    padding: 40px;
+    z-index: 200;
+    overflow-y: auto;
+  }
+  .overlay-content-card {
+    max-width: 850px;
+    margin: 0 auto;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    padding: 25px;
+    border-radius: 8px;
+  }
+
+  .manager-title {
+    font-size: 16px;
+    color: #00ffcc;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    border-bottom: 1px solid #333;
+    padding-bottom: 10px;
+  }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .form-row-three {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .filter-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    background: #151515;
+    padding: 12px;
+    border-radius: 4px;
+    margin-bottom: 15px;
+    border: 1px solid #252525;
+  }
+
+  label { font-size: 12px; color: #aaa; display: block; margin-bottom: 6px; text-align: left; }
+  input[type="text"], input[type="number"], select {
+    background: #222;
+    color: #fff;
+    border: 1px solid #444;
+    padding: 8px;
+    font-family: monospace;
+    border-radius: 4px;
+    box-sizing: border-box;
+    width: 100%;
+  }
+  input[type="text"]:focus, input[type="number"]:focus, select:focus {
+    border-color: #00ffcc;
+    outline: none;
+  }
+  button {
+    background: #00ffcc;
+    color: #111;
+    border: none;
+    padding: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    border-radius: 4px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+  }
+  button:hover { background: #00ccaa; }
+  
+  .bank-table-container {
+    max-height: 280px;
+    overflow-y: auto;
+    background: #141414;
+    border: 1px solid #222;
+    border-radius: 4px;
+    margin-bottom: 12px;
+  }
+  .bank-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 11px;
+    text-align: left;
+  }
+  .bank-table th {
+    background: #222;
+    color: #00ffcc;
+    padding: 8px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  .bank-table td {
+    padding: 8px;
+    border-bottom: 1px solid #222;
+    color: #ccc;
+    vertical-align: middle;
+  }
+  .bank-table input, .bank-table select {
+    padding: 4px;
+    font-size: 11px;
+    background: #111;
+  }
+  .bank-table tr:hover { background: #1c1c1c; }
+  .action-cell { text-align: center; color: #ff3366; cursor: pointer; font-size: 13px; }
+  .edit-cell { text-align: center; color: #00ffcc; cursor: pointer; font-size: 13px; }
+
+  #training-arena { display: none; text-align: center; width: 550px; position: relative; }
+  
+  #display-box { 
+    font-size: 72px; 
+    font-weight: bold; 
+    color: #ffffff; 
+    margin-bottom: 10px; 
+    min-height: 90px;
+    transition: color 0.04s ease, text-shadow 0.04s ease, opacity 0.1s ease;
+  }
+  
+  .perfect-strike { color: #00ffcc !important; text-shadow: 0 0 20px #00ffcc; }
+  .error-strike { color: #ff3366 !important; text-shadow: 0 0 20px #ff3366; }
+  .paused-display { color: #555 !important; text-shadow: none !important; }
+
+  #input-field {
+    font-size: 32px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid #444;
+    color: #fff;
+    text-align: center;
+    outline: none;
+    font-family: monospace;
+    width: 100%;
+  }
+  #input-field:focus { border-bottom-color: #00ffcc; }
+  #input-field:disabled { border-bottom-color: #333; color: #444; }
+
+  #timer-bar-container { width: 100%; height: 4px; background: #222; margin-top: 15px; overflow: hidden; }
+  #timer-bar { width: 100%; height: 100%; background: #00ffcc; }
+  #metrics-panel { 
+    margin-top: 20px; 
+    display: flex; 
+    justify-content: space-around; 
+    color: #888; 
+    font-size: 14px;
+    border-top: 1px solid #222;
+    padding-top: 15px;
+  }
+  .metric-value { color: #fff; font-weight: bold; }
+  
+  #matrix-title { margin-top: 20px; font-size: 11px; color: #666; text-align: left; text-transform: uppercase; letter-spacing: 1px; }
+  #accuracy-matrix {
+    margin-top: 5px;
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+    max-height: 110px;
+    overflow-y: auto;
+    background: #141414;
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #222;
+  }
+  .matrix-cell { font-size: 11px; padding: 4px; background: #1c1c1c; border-radius: 2px; text-align: left; color: #aaa; }
+  .matrix-cell.perfect { color: #00ffcc; }
+  .matrix-cell.warn { color: #ffaa00; }
+  .matrix-cell.critical { color: #ff3366; }
+
+  #error-log { margin-top: 15px; font-size: 12px; color: #ff5555; text-align: left; padding: 5px; background: #151515; border-radius: 4px; min-height: 18px; }
+  .nav-btn { background: #222; color: #888; border: 1px solid #333; padding: 6px 12px; font-size: 11px; cursor: pointer; margin-top: 20px; border-radius: 4px; display: inline-block; }
+  .nav-btn:hover { color: #fff; border-color: #505050; }
+  #pause-sentinel { font-size: 12px; color: #00ffcc; margin-top: 10px; font-weight: bold; min-height: 15px; visibility: hidden; }
+
+  #analytics-overlay {
+    display: none;
+    position: absolute;
+    top: -10px;
+    left: -10px;
+    width: calc(100% + 20px);
+    height: calc(100% + 20px);
+    background: rgba(20, 20, 20, 0.98);
+    border-radius: 8px;
+    border: 1px solid #00ffcc;
+    box-sizing: border-box;
+    padding: 25px;
+    text-align: left;
+    z-index: 100;
+    overflow-y: auto;
+  }
+  .view-tab-btn { background: #1c1c1c; color: #666; border: 1px solid #333; padding: 6px 12px; font-size: 11px; cursor: pointer; font-family: monospace; }
+  .view-tab-btn.active { background: #252525; color: #00ffcc; border-color: #00ffcc; }
+  .history-log-row { font-size: 12px; border-bottom: 1px solid #222; padding: 6px 0; display: flex; justify-content: space-between; color: #ccc; }
+  .history-timestamp { color: #666; }
+  .history-pct { font-weight: bold; }
+  .history-pct.good { color: #00ffcc; }
+  .history-pct.mid { color: #ffaa00; }
+  .history-pct.low { color: #ff3366; }
+
+  .macro-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .macro-card { background: #161616; border: 1px solid #252525; padding: 8px; border-radius: 4px; font-size: 12px; }
+  .macro-card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 4px; margin-bottom: 6px; }
+  .danger-btn { background: #222; color: #ff3366; border: 1px solid #443333; padding: 5px 10px; font-size: 11px; cursor: pointer; border-radius: 4px; }
+  .danger-btn:hover { background: #331a22; border-color: #ff3366; }
+  
+  .home-headline { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;}
+  .export-panel { background: #151515; border: 1px solid #252525; padding: 12px; border-radius: 4px; display: flex; gap: 15px; align-items: center; justify-content: space-between; margin-top: 15px;}
+</style>
+</head>
+<body>
+
+<!-- HOME / MAIN DASHBOARD -->
+<div id="setup-panel">
+  <div class="home-headline">Reflex Engine Home</div>
+  
+  <div style="display:grid; grid-template-columns: 1fr 120px; gap: 15px; margin-bottom: 25px;">
+    <div>
+      <label>Training Mode</label>
+      <select id="mode-select" onchange="updateLaunchButtonLabel()">
+        <option value="words">Word Bank Engine (Mask Pairs)</option>
+        <option value="letters">Single-Letter Reflex Mode</option>
+      </select>
+    </div>
+    <div>
+      <label>Target WPM</label>
+      <input type="number" id="wpm-input" value="60" min="10" max="300">
+    </div>
+  </div>
+
+  <button id="action-launch-btn" onclick="handleMainLaunchTrigger()" style="font-size: 13px; height: 45px; margin-bottom: 12px;">Launch Drill Loop with Filtered Set</button>
+  <button id="action-launch-full-btn" onclick="startTraining(false)" style="font-size: 12px; height: 40px; margin-bottom: 25px; background: #222; color: #aaa; border: 1px solid #444;">Launch Full Bank Drill (No Filters)</button>
+  
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+    <button onclick="toggleWordManagerOverlay(true)" style="background:#1c1c1c; color:#00ffcc; border:1px solid #00ffcc; padding: 10px 0;">Manage Word Bank</button>
+    <button onclick="openAnalyticsFromHome()" style="background:#1c1c1c; color:#aaa; border:1px solid #333; padding: 10px 0;">Metrics Dossier</button>
+  </div>
+</div>
+
+<!-- WORD BANK MANAGER SUB-SCREEN OVERLAY -->
+<div id="word-manager-overlay" class="fullscreen-overlay">
+  <div class="overlay-content-card">
+    <div class="manager-title">Master Word Bank Manager</div>
+    
+    <div class="form-row">
+      <div>
+        <label>Word</label>
+        <input type="text" id="ins-word" placeholder="e.g., queen" oninput="autoDeriveProperties()">
+      </div>
+      <div>
+        <label>Mask Format</label>
+        <input type="text" id="ins-mask" placeholder="e.g., que_n">
+      </div>
+      <div>
+        <label># Letters</label>
+        <input type="number" id="ins-len" readonly style="background:#2a2a2a; color:#888;">
+      </div>
+    </div>
+    <div class="form-row-three">
+      <div>
+        <label>Finger Target</label>
+        <select id="ins-finger">
+          <option value="left pinky">Left Pinky</option>
+          <option value="left ring">Left Ring</option>
+          <option value="left middle">Left Middle</option>
+          <option value="left index">Left Index</option>
+          <option value="right index">Right Index</option>
+          <option value="right middle">Right Middle</option>
+          <option value="right ring">Right Ring</option>
+          <option value="right pinky">Right Pinky</option>
+        </select>
+      </div>
+      <div>
+        <label>Target Letters</label>
+        <input type="text" id="ins-target-chars" placeholder="e.g., q, u">
+      </div>
+      <div>
+        <label>Starts With Cue</label>
+        <input type="text" id="ins-start" placeholder="e.g., qu">
+      </div>
+    </div>
+    <button onclick="addWordToBank()" style="background: #222; color: #00ffcc; border: 1px solid #00ffcc; margin-bottom: 25px;">+ Save Entry To Local Registry</button>
+
+    <div style="font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Optional Target Set Filters:</div>
+    <div class="filter-grid">
+      <div>
+        <label>Finger Target</label>
+        <select id="flt-finger" onchange="updateVisibleBankTable()">
+          <option value="">-- Clear Finger Filter --</option>
+          <option value="left pinky">Left Pinky</option>
+          <option value="left ring">Left Ring</option>
+          <option value="left middle">Left Middle</option>
+          <option value="left index">Left Index</option>
+          <option value="right index">Right Index</option>
+          <option value="right middle">Right Middle</option>
+          <option value="right ring">Right Ring</option>
+          <option value="right pinky">Right Pinky</option>
+        </select>
+      </div>
+      <div>
+        <label>Starts With Sequence</label>
+        <input type="text" id="flt-start" placeholder="Filter cue starting context..." oninput="updateVisibleBankTable()">
+      </div>
+    </div>
+
+    <div style="display: flex; justify-content: space-between; font-size: 11px; margin-bottom: 6px; color: #888; text-transform: uppercase;">
+      <span>Word Bank Registry (Alphabetical)</span>
+      <span id="match-counter" style="color: #00ffcc; font-weight: bold;">0 Matches</span>
+    </div>
+    <div class="bank-table-container">
+      <table class="bank-table">
+        <thead>
+          <tr>
+            <th>Word</th>
+            <th>Mask</th>
+            <th>Len</th>
+            <th>Finger Target</th>
+            <th>Targets</th>
+            <th>Cue Context</th>
+            <th style="width:40px; text-align:center;">Edit</th>
+            <th style="width:40px; text-align:center;">Del</th>
+          </tr>
+        </thead>
+        <tbody id="bank-table-body"></tbody>
+      </table>
+    </div>
+
+   <!-- DATA PORTABILITY HUB (EXPORT / IMPORT) -->
+    <div class="export-panel" style="flex-direction: column; align-items: stretch; gap: 15px;">
+      <div style="font-size: 12px; color: #aaa; border-bottom: 1px solid #252525; padding-bottom: 8px;">
+        <strong>Database Portability Hub:</strong> Export copies of your registry to your clipboard, or paste a backup string below to restore your master word bank.
+      </div>
+      
+      <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between;">
+        <span style="font-size: 11px; color: #888;">Step 1: Save a cold backup copy of your data</span>
+        <button onclick="exportWordBankJSON()" style="width: auto; padding: 8px 16px; background: #1c1c1c; color: #00ffcc; border: 1px solid #00ffcc;">Export Word Bank JSON</button>
+      </div>
+
+      <div style="margin-top: 5px;">
+        <label for="import-string-input">Step 2: Paste your backup JSON text string below to restore or sync</label>
+        <textarea id="import-string-input" placeholder='Paste your backup text here... e.g., [{"word": "queen", ...}]' style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #333; font-family: monospace; font-size: 11px; box-sizing: border-box; padding: 8px; border-radius: 4px; resize: none; margin-bottom: 8px;"></textarea>
+        <button onclick="importWordBankJSON()" style="background: #222; color: #ffaa00; border: 1px solid #ffaa00; padding: 8px 16px; width: auto; display: block; margin-left: auto;">Import & Process Backup</button>
+      </div>
+    </div>
+
+<!-- LIVE DRILL ARENA SCREEN -->
+<div id="training-arena">
+  <div id="analytics-overlay">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 15px;">
+      <div>
+        <button id="tab-runs" class="view-tab-btn active" onclick="switchDossierTab('runs')">RUN HISTORY</button>
+        <button id="tab-keys" class="view-tab-btn" onclick="switchDossierTab('keys')">ADVANCED KEY TELEMETRY</button>
+      </div>
+      <button class="danger-btn" onclick="wipeSavedHistory()">Wipe Data</button>
+    </div>
+
+    <div class="telemetry-filters" style="margin-bottom: 15px; display: none; gap: 15px; background: #1a1a1a; padding: 10px; border-radius: 4px; border: 1px solid #333;">
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <label for="timePeriod" style="font-size: 11px; margin-bottom: 0;">Time Period:</label>
+        <select id="timePeriod" onchange="displayKeyTelemetryTrends()" style="padding: 4px 8px; margin-bottom: 0; font-size: 12px; width: auto;">
+          <option value="all">All Time</option>
+          <option value="24h">Past 24 Hours</option>
+          <option value="7d">Past 7 Days</option>
+          <option value="30d">Past 30 Days</option>
+        </select>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 4px;">
+        <label for="sortBy" style="font-size: 11px; margin-bottom: 0;">Sort By:</label>
+        <select id="sortBy" onchange="displayKeyTelemetryTrends()" style="padding: 4px 8px; margin-bottom: 0; font-size: 12px; width: auto;">
+          <option value="key">Key (A-Z)</option>
+          <option value="latency-desc">Strike Latency (High to Low)</option>
+          <option value="acc-desc">Macro Accuracy (High to Low)</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="analytics-timeline-container" style="max-height: 290px; overflow-y: auto; margin-bottom: 15px;"></div>
+    <div id="analytics-keys-container" style="max-height: 290px; overflow-y: auto; margin-bottom: 15px; display: none;"></div>
+
+    <div style="text-align: right;">
+      <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="margin-top: 0; border-color:#00ffcc; color:#00ffcc;">[Close]</div>
+    </div>
+  </div>
+
+  <div id="display-box">-</div>
+  <div id="pause-sentinel">SYSTEM PAUSED - HIT CONTROL TO RESUME</div>
+  <input type="text" id="input-field" autocomplete="off" spellcheck="false">
+  <div id="timer-bar-container"><div id="timer-bar"></div></div>
+  
+  <div id="metrics-panel">
+    <div>Session Accuracy: <span id="accuracy-val" class="metric-value">100%</span></div>
+    <div>Session Targets: <span id="count-val" class="metric-value">0</span></div>
+  </div>
+  
+  <div id="error-log">Telemetry Log: Ready...</div>
+  <div id="matrix-title">Live Session Letter Accuracy</div>
+  <div id="accuracy-matrix"></div>
+  
+  <div style="display: flex; justify-content: space-between; align-items: center;">
+    <div class="nav-btn" onclick="archiveAndReturn()">[ESC] Save Run & Exit</div>
+    <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none;">View Macro Metrics</div>
+    <div style="font-size: 11px; color: #444; margin-top: 20px;">[CTRL] Pause/Resume</div>
+  </div>
+</div>
+
+<script>
+  const defaultBank = [
+    { word: "queen", mask: "que_n", letters: 5, finger: "left pinky", targets: "q, u", starts: "que" },
+    { word: "quantum", mask: "quan_um", letters: 7, finger: "left pinky", targets: "q", starts: "quan" },
+    { word: "system", mask: "sys_em", letters: 6, finger: "left ring", targets: "s", starts: "sy" },
+    { word: "theory", mask: "the_ry", letters: 6, finger: "left index", targets: "t", starts: "the" }
+  ];
+
+  let wordBank = [];
+  let masterPool = []; 
+  let currentTarget = null;
+  let timerTimeout = null;
+  let transitionTimeout = null;
+  let isTransitioning = false; 
+  let activeMode = "words";
+  
+  let isPaused = false;
+  let launchedFromHome = false;
+  let timeWindowAllocated = 0;
+  let timeTargetStarted = 0;
+  let timeRemainingOnPause = 0;
+  let lastKeystrokeTimestamp = 0; 
+  let currentDossierTab = 'runs';
+  let editingRowIndex = null; // Tracks row index currently being edited
+
+  let totalKeystrokes = 0;
+  let incorrectKeystrokes = 0;
+  let targetsCompleted = 0;
+  let errorMap = [];
+  let letterMetrics = {};
+
+  const setupPanel = document.getElementById('setup-panel');
+  const trainingArena = document.getElementById('training-arena');
+  const wordManagerOverlay = document.getElementById('word-manager-overlay');
+  const displayBox = document.getElementById('display-box');
+  const inputField = document.getElementById('input-field');
+  const timerBar = document.getElementById('timer-bar');
+  const wpmInput = document.getElementById('wpm-input');
+  const modeSelect = document.getElementById('mode-select');
+  const actionLaunchBtn = document.getElementById('action-launch-btn');
+  const actionLaunchFullBtn = document.getElementById('action-launch-full-btn');
+  
+  const accuracyVal = document.getElementById('accuracy-val');
+  const countVal = document.getElementById('count-val');
+  const errorLog = document.getElementById('error-log');
+  const accuracyMatrix = document.getElementById('accuracy-matrix');
+  const pauseSentinel = document.getElementById('pause-sentinel');
+  const analyticsOverlay = document.getElementById('analytics-overlay');
+  const analyticsTimeline = document.getElementById('analytics-timeline-container');
+  const analyticsKeysContainer = document.getElementById('analytics-keys-container');
+  const dossierToggleBtn = document.getElementById('dossier-toggle-btn');
+  const dossierCloseBtn = document.getElementById('dossier-close-btn');
+
+  const alphabet = "abcdefghijklmnopqrstuvwxyz";
+
+  // --- SUB-SCREEN OVERLAY TOGGLE ---
+  function toggleWordManagerOverlay(show) {
+    if (show) {
+      editingRowIndex = null;
+      wordManagerOverlay.style.display = 'block';
+      updateVisibleBankTable();
+    } else {
+      wordManagerOverlay.style.display = 'none';
+    }
+  }
+
+  // --- LOCAL PERSISTENCE SYSTEM ---
+  function loadBankFromStorage() {
+    const raw = localStorage.getItem('reflex_word_bank_v1');
+    if (raw) {
+      wordBank = JSON.parse(raw);
+    } else {
+      wordBank = [...defaultBank];
+      saveBankToStorage();
+    }
+    updateLaunchButtonLabel();
+  }
+
+  function saveBankToStorage() {
+    localStorage.setItem('reflex_word_bank_v1', JSON.stringify(wordBank));
+  }
+
+  function autoDeriveProperties() {
+    const wordVal = document.getElementById('ins-word').value.trim().toLowerCase();
+    document.getElementById('ins-len').value = wordVal.length > 0 ? wordVal.length : "";
+    
+    const insStartField = document.getElementById('ins-start');
+    if(wordVal.length > 0 && insStartField.value === "") {
+       insStartField.value = wordVal.length >= 2 ? wordVal.substring(0, 2) : wordVal;
+    }
+  }
+
+  function addWordToBank() {
+    const word = document.getElementById('ins-word').value.trim().toLowerCase();
+    const mask = document.getElementById('ins-mask').value.trim().toLowerCase();
+    const finger = document.getElementById('ins-finger').value;
+    const targets = document.getElementById('ins-target-chars').value.trim().toLowerCase();
+    const starts = document.getElementById('ins-start').value.trim().toLowerCase();
+    
+    if (!word || !mask) {
+      alert("Word and Mask fields are required.");
+      return;
+    }
+
+    const letters = word.length;
+
+    wordBank.push({ word, mask, letters, finger, targets, starts });
+    saveBankToStorage();
+    updateVisibleBankTable();
+
+    document.getElementById('ins-word').value = "";
+    document.getElementById('ins-mask').value = "";
+    document.getElementById('ins-len').value = "";
+    document.getElementById('ins-target-chars').value = "";
+    document.getElementById('ins-start').value = "";
+  }
+
+  // --- EDIT & UPDATE MECHANICS ---
+  function toggleEditRow(idx) {
+    if (editingRowIndex === idx) {
+      // Save current changes out of inline form fields
+      const filtered = getFilteredAndSortedBank(true);
+      const targetItem = filtered[idx];
+      const realIndex = wordBank.findIndex(item => item === targetItem);
+
+      if (realIndex !== -1) {
+        const updatedWord = document.getElementById(`edit-word-${idx}`).value.trim().toLowerCase();
+        const updatedMask = document.getElementById(`edit-mask-${idx}`).value.trim().toLowerCase();
+        
+        if (!updatedWord || !updatedMask) {
+          alert("Word and Mask fields cannot be saved empty.");
+          return;
+        }
+
+        wordBank[realIndex].word = updatedWord;
+        wordBank[realIndex].mask = updatedMask;
+        wordBank[realIndex].letters = updatedWord.length;
+        wordBank[realIndex].finger = document.getElementById(`edit-finger-${idx}`).value;
+        wordBank[realIndex].targets = document.getElementById(`edit-targets-${idx}`).value.trim().toLowerCase();
+        wordBank[realIndex].starts = document.getElementById(`edit-start-${idx}`).value.trim().toLowerCase();
+        
+        saveBankToStorage();
+      }
+      editingRowIndex = null;
+    } else {
+      editingRowIndex = idx;
+    }
+    updateVisibleBankTable();
+  }
+
+  function deleteWord(indexInFiltered) {
+    const filtered = getFilteredAndSortedBank(true);
+    const targetItem = filtered[indexInFiltered];
+    
+    const realIndex = wordBank.findIndex(item => item === targetItem);
+    if (realIndex !== -1) {
+      wordBank.splice(realIndex, 1);
+      saveBankToStorage();
+      editingRowIndex = null;
+      updateVisibleBankTable();
+    }
+  }
+
+  function getFilteredAndSortedBank(applyFilters = true) {
+    if (!applyFilters) {
+      return [...wordBank].sort((a, b) => a.word.localeCompare(b.word));
+    }
+    const fltFinger = document.getElementById('flt-finger').value;
+    const fltStart = document.getElementById('flt-start').value.trim().toLowerCase();
+
+    return wordBank.filter(item => {
+      const matchFinger = !fltFinger || item.finger === fltFinger;
+      const matchStart = !fltStart || item.starts.startsWith(fltStart) || item.word.startsWith(fltStart);
+      return matchFinger && matchStart;
+    }).sort((a, b) => a.word.localeCompare(b.word));
+  }
+
+  function updateVisibleBankTable() {
+    const tbody = document.getElementById('bank-table-body');
+    tbody.innerHTML = '';
+    
+    const visibleItems = getFilteredAndSortedBank(true);
+    document.getElementById('match-counter').innerText = `${visibleItems.length} Matches`;
+
+    visibleItems.forEach((item, idx) => {
+      const tr = document.createElement('tr');
+      
+      if (editingRowIndex === idx) {
+        // Display interactive inputs inside fields for the edited entry
+        tr.innerHTML = `
+          <td><input type="text" id="edit-word-${idx}" value="${item.word}" style="width:90px;"></td>
+          <td><input type="text" id="edit-mask-${idx}" value="${item.mask}" style="width:90px;"></td>
+          <td><span style="color:#666;">auto</span></td>
+          <td>
+            <select id="edit-finger-${idx}">
+              <option value="left pinky" ${item.finger === 'left pinky' ? 'selected' : ''}>Left Pinky</option>
+              <option value="left ring" ${item.finger === 'left ring' ? 'selected' : ''}>Left Ring</option>
+              <option value="left middle" ${item.finger === 'left middle' ? 'selected' : ''}>Left Middle</option>
+              <option value="left index" ${item.finger === 'left index' ? 'selected' : ''}>Left Index</option>
+              <option value="right index" ${item.finger === 'right index' ? 'selected' : ''}>Right Index</option>
+              <option value="right middle" ${item.finger === 'right middle' ? 'selected' : ''}>Right Middle</option>
+              <option value="right ring" ${item.finger === 'right ring' ? 'selected' : ''}>Right Ring</option>
+              <option value="right pinky" ${item.finger === 'right pinky' ? 'selected' : ''}>Right Pinky</option>
+            </select>
+          </td>
+          <td><input type="text" id="edit-targets-${idx}" value="${item.targets || ''}" style="width:70px;"></td>
+          <td><input type="text" id="edit-start-${idx}" value="${item.starts}" style="width:70px;"></td>
+          <td class="edit-cell" onclick="toggleEditRow(${idx})">💾</td>
+          <td class="action-cell" onclick="deleteWord(${idx})">✖</td>
+        `;
+      } else {
+        // Standard scannable layout row
+        tr.innerHTML = `
+          <td><strong>${item.word}</strong></td>
+          <td>${item.mask}</td>
+          <td>${item.letters}</td>
+          <td style="text-transform: capitalize;">${item.finger || '-'}</td>
+          <td>${item.targets || '-'}</td>
+          <td>${item.starts}</td>
+          <td class="edit-cell" onclick="toggleEditRow(${idx})">✎</td>
+          <td class="action-cell" onclick="deleteWord(${idx})">✖</td>
+        `;
+      }
+      tbody.appendChild(tr);
+    });
+  }
+
+  // --- DATA EXPORT UTILITY ---
+  function exportWordBankJSON() {
+    try {
+      const serializedData = JSON.stringify(wordBank, null, 2);
+      navigator.clipboard.writeText(serializedData).then(() => {
+        alert("Word bank database successfully parsed and copied to your clipboard as an organized JSON string array.");
+      }).catch(err => {
+        console.error('Could not copy string out: ', err);
+        // Fallback fallback output if clipboard API blocks security context
+        const win = window.open();
+        win.document.write('<pre>' + serializedData + '</pre>');
+      });
+    } catch(e) {
+      alert("Error generating export payload.");
+    }
+  }
+
+function importWordBankJSON() {
+    const inputArea = document.getElementById('import-string-input');
+    const rawData = inputArea.value.trim();
+
+    if (!rawData) {
+      alert("The import field is completely empty. Please paste a valid backup text string first.");
+      return;
+    }
+
+    try {
+      // Step 1: Attempt to safely parse the raw text back into a real JavaScript list
+      const parsedData = JSON.parse(rawData);
+
+      // Step 2: Validate that the structure inside is actually a list array
+      if (!Array.isArray(parsedData)) {
+        alert("Import Failure: The text provided isn't a structured list format. Make sure it begins with [ and ends with ].");
+        return;
+      }
+
+      // Step 3: Run a light sanity check to ensure the items look like word entries
+      if (parsedData.length > 0 && (!parsedData[0].hasOwnProperty('word') || !parsedData[0].hasOwnProperty('mask'))) {
+        alert("Import Failure: The entries are missing crucial 'word' or 'mask' labels. Double check your source text.");
+        return;
+      }
+
+      // Step 4: Ask for absolute confirmation before overwriting active memory
+      const confirmation = confirm(`System found ${parsedData.length} words in this backup payload. Do you want to load them into your master registry? This will replace your current active view.`);
+      
+      if (confirmation) {
+        // Commit directly to active state and browser memory
+        wordBank = parsedData;
+        saveBankToStorage();
+        
+        // Refresh our table interface to instantly show the imported list
+        updateVisibleBankTable();
+        updateLaunchButtonLabel();
+        
+        // Clear out the input field so it's clean for next time
+        inputArea.value = "";
+        alert("Database successfully restored! Your master word bank is synchronized.");
+      }
+
+    } catch (error) {
+      // If a comma or bracket was broken, the JSON parser triggers a catch event
+      console.error(error);
+      alert("Parsing Failure: The text contains a structural formatting error (likely a missing comma, unclosed quote, or broken bracket). Check your backup file.");
+    }
+  }
+
+  function prepareActivePool(useFilters = true) {
+    const activeSet = getFilteredAndSortedBank(useFilters);
+    masterPool = [];
+    activeSet.forEach(pair => {
+      masterPool.push({ display: pair.word, expected: pair.word });
+      masterPool.push({ display: pair.mask, expected: pair.word });
+    });
+  }
+
+  // --- ENGINE RUN HISTORIES & KEY TELEMETRY ---
+  function resetSessionMetrics() {
+    totalKeystrokes = 0;
+    incorrectKeystrokes = 0;
+    targetsCompleted = 0;
+    errorMap = [];
+    letterMetrics = {};
+    for (let char of alphabet) {
+      letterMetrics[char] = { total: 0, errors: 0, latencies: [] };
+    }
+    accuracyVal.innerText = "100%";
+    countVal.innerText = "0";
+    errorLog.innerHTML = "Telemetry Log: Ready...";
+  }
+
+  function saveSessionToHistory() {
+    if (targetsCompleted === 0) return;
+    try {
+      const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
+      const finalAccuracy = totalKeystrokes > 0 ? ((totalKeystrokes - incorrectKeystrokes) / totalKeystrokes) * 100 : 100;
+      
+      const letterDataSnapshot = {};
+      for (let char of alphabet) {
+        if (letterMetrics[char].total > 0) {
+          letterDataSnapshot[char] = {
+            total: letterMetrics[char].total,
+            errors: letterMetrics[char].errors,
+            latencies: letterMetrics[char].latencies
+          };
+        }
+      }
+
+      const entry = {
+        timestamp: new Date().toLocaleString(),
+        mode: activeMode === 'letters' ? 'Reflex Letters' : 'Mask Pairs',
+        wpm: wpmInput.value,
+        accuracy: finalAccuracy.toFixed(1),
+        hits: targetsCompleted,
+        letterData: letterDataSnapshot
+      };
+      history.unshift(entry);
+      localStorage.setItem('reflex_history_v3', JSON.stringify(history));
+    } catch(e) { console.error(e); }
+  }
+
+  function switchDossierTab(tab) {
+    currentDossierTab = tab;
+    document.getElementById('tab-runs').className = (tab === 'runs') ? 'view-tab-btn active' : 'view-tab-btn';
+    document.getElementById('tab-keys').className = (tab === 'keys') ? 'view-tab-btn active' : 'view-tab-btn';
+    
+    const filtersEl = document.querySelector('.telemetry-filters');
+    if (tab === 'runs') {
+      if (filtersEl) filtersEl.style.display = 'none';
+      analyticsTimeline.style.display = 'block';
+      analyticsKeysContainer.style.display = 'none';
+      displayAnalyticsHistory();
+    } else {
+      if (filtersEl) filtersEl.style.display = 'flex';
+      analyticsTimeline.style.display = 'none';
+      analyticsKeysContainer.style.display = 'block';
+      displayKeyTelemetryTrends();
+    }
+  }
+
+  function displayAnalyticsHistory() {
+    analyticsTimeline.innerHTML = '';
+    const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
+    if (history.length === 0) {
+      analyticsTimeline.innerHTML = '<div style="color:#555; text-align:center; margin-top:50px;">No historical sessions found.</div>';
+      return;
+    }
+    history.forEach(run => {
+      const row = document.createElement('div');
+      row.className = 'history-log-row';
+      let colorClass = 'good';
+      if (parseFloat(run.accuracy) < 85) colorClass = 'low';
+      else if (parseFloat(run.accuracy) < 95) colorClass = 'mid';
+      
+      row.innerHTML = `
+        <div>
+          <span class="history-timestamp">[${run.timestamp}]</span> 
+          <span style="color:#00ffcc; margin-left:8px;">${run.mode}</span> 
+          <span style="color:#888; margin-left:8px;">@ ${run.wpm} WPM</span>
+        </div>
+        <div>
+          <span style="color:#aaa; margin-right:12px;">Hits: ${run.hits}</span>
+          <span class="history-pct ${colorClass}">${run.accuracy}% Acc</span>
+        </div>
+      `;
+      analyticsTimeline.appendChild(row);
+    });
+  }
+
+  function displayKeyTelemetryTrends() {
+    analyticsKeysContainer.innerHTML = '';
+    const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
+    const timePeriod = document.getElementById('timePeriod')?.value || 'all';
+    const sortBy = document.getElementById('sortBy')?.value || 'key';
+    
+    const now = Date.now();
+    let cutoffTime = 0;
+    if (timePeriod === '24h') cutoffTime = now - (24 * 60 * 60 * 1000);
+    else if (timePeriod === '7d') cutoffTime = now - (7 * 24 * 60 * 60 * 1000);
+    else if (timePeriod === '30d') cutoffTime = now - (30 * 24 * 60 * 60 * 1000);
+
+    const aggregatedKeys = {};
+    for (let char of alphabet) { aggregatedKeys[char] = { totalAttempts: 0, totalErrors: 0, allLatencies: [] }; }
+
+    history.forEach(run => {
+      if (!run.letterData) return;
+      const runTime = new Date(run.timestamp).getTime();
+      if (timePeriod !== 'all' && (isNaN(runTime) || runTime < cutoffTime)) return;
+
+      for (let char in run.letterData) {
+        if (aggregatedKeys[char]) {
+          aggregatedKeys[char].totalAttempts += run.letterData[char].total;
+          aggregatedKeys[char].totalErrors += run.letterData[char].errors;
+          if (run.letterData[char].latencies) {
+            aggregatedKeys[char].allLatencies = aggregatedKeys[char].allLatencies.concat(run.letterData[char].latencies);
+          }
+        }
+      }
+    });
+
+    let processedKeys = [];
+    for (let char of alphabet) {
+      const stats = aggregatedKeys[char];
+      if (stats.totalAttempts === 0) continue;
+      const macroAcc = ((stats.totalAttempts - stats.totalErrors) / stats.totalAttempts) * 100;
+      let avgLatency = 0;
+      if (stats.allLatencies.length > 0) {
+        avgLatency = stats.allLatencies.reduce((a, b) => a + b, 0) / stats.allLatencies.length;
+      }
+      processedKeys.push({ char, macroAcc, avgLatency, totalAttempts: stats.totalAttempts });
+    }
+
+    if (sortBy === 'latency-desc') processedKeys.sort((a, b) => b.avgLatency - a.avgLatency);
+    else if (sortBy === 'acc-desc') processedKeys.sort((a, b) => b.macroAcc - a.macroAcc);
+    else processedKeys.sort((a, b) => a.char.localeCompare(b.char));
+
+    if (processedKeys.length === 0) {
+      analyticsKeysContainer.innerHTML = '<div style="color:#555; text-align:center; margin-top:50px;">No telemetry records match this time frame.</div>';
+      return;
+    }
+
+    const grid = document.createElement('div');
+    grid.className = 'macro-grid';
+
+    processedKeys.forEach(item => {
+      let accColor = '#00ffcc';
+      if (item.macroAcc < 85) accColor = '#ff3366';
+      else if (item.macroAcc < 95) accColor = '#ffaa00';
+
+      const card = document.createElement('div');
+      card.className = 'macro-card';
+      card.innerHTML = `
+        <div class="macro-card-header">
+          <span style="font-weight:bold; color:#fff; font-size:14px;">Key: [${item.char.toUpperCase()}]</span>
+          <span style="color:${accColor}; font-weight:bold;">${item.macroAcc.toFixed(1)}% Macro Acc</span>
+        </div>
+        <div style="display:flex; justify-content:space-between; color:#888;">
+          <span>Strikes: <strong style="color:#eee;">${item.totalAttempts}</strong></span>
+          <span>Latency: <strong style="color:#eee;">${item.avgLatency > 0 ? Math.round(item.avgLatency) + 'ms' : 'N/A'}</strong></span>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+    analyticsKeysContainer.appendChild(grid);
+  }
+
+  function wipeSavedHistory() {
+    if (confirm("Permanently wipe your historical improvements dossier and letter strike speed logs?")) {
+      localStorage.removeItem('reflex_history_v3');
+      if (currentDossierTab === 'runs') displayAnalyticsHistory();
+      else displayKeyTelemetryTrends();
+    }
+  }
+
+  function openAnalyticsFromHome() {
+    launchedFromHome = true;
+    setupPanel.style.display = 'none';
+    trainingArena.style.display = 'block';
+    dossierCloseBtn.innerText = "[Return Home]";
+    toggleAnalyticsView(true);
+  }
+
+  function toggleAnalyticsView(show) {
+    if (show) {
+      switchDossierTab(currentDossierTab);
+      analyticsOverlay.style.display = 'block';
+    } else {
+      analyticsOverlay.style.display = 'none';
+      if (isPaused) inputField.blur();
+    }
+  }
+
+  function closeAnalyticsView() {
+    if (launchedFromHome) {
+      analyticsOverlay.style.display = 'none';
+      trainingArena.style.display = 'none';
+      setupPanel.style.display = 'block';
+      launchedFromHome = false;
+    } else {
+      toggleAnalyticsView(false);
+      dossierCloseBtn.innerText = "[Resume Session]";
+      setTimeout(() => inputField.focus(), 10);
+    }
+  }
+
+  function updateLaunchButtonLabel() {
+    activeMode = modeSelect.value;
+    if (activeMode === "letters") {
+      actionLaunchBtn.innerText = "Launch Single Letter Drill";
+      actionLaunchFullBtn.style.display = "none";
+    } else {
+      actionLaunchBtn.innerText = "Launch Filtered Drill";
+      actionLaunchFullBtn.style.display = "inline-block";
+    }
+  }
+
+  function handleMainLaunchTrigger() {
+    if (modeSelect.value === "letters") {
+      startTraining(false);
+    } else {
+      startTraining(true);
+    }
+  }
+
+  function calculateWindow(targetLength) {
+    const wpm = parseInt(wpmInput.value, 10);
+    return (60000 / (wpm * 5)) * targetLength;
+  }
+
+  // --- LIVE SESSION DATA MATRIX ---
+  function renderMatrix() {
+    accuracyMatrix.innerHTML = '';
+    for (let char of alphabet) {
+      const data = letterMetrics[char] || { total: 0, errors: 0 };
+      let cellClass = '';
+      let displayPct = '---';
+      if (data.total > 0) {
+        const pct = ((data.total - data.errors) / data.total) * 100;
+        displayPct = `${Math.round(pct)}%`;
+        if (pct === 100) cellClass = 'perfect';
+        else if (pct >= 85) cellClass = 'warn';
+        else cellClass = 'critical';
+      }
+      const cell = document.createElement('div');
+      cell.className = `matrix-cell ${cellClass}`;
+      cell.innerHTML = `<strong>${char}</strong>: ${displayPct}`;
+      accuracyMatrix.appendChild(cell);
+    }
+  }
+
+  // --- CORE SYSTEM TRAINING LOOP ENGINE ---
+  function nextWord() {
+    inputField.value = '';
+    clearTimeout(timerTimeout);
+    clearTimeout(transitionTimeout);
+    isTransitioning = false;
+    isPaused = false;
+    displayBox.className = ''; 
+    pauseSentinel.style.visibility = 'hidden';
+    inputField.disabled = false;
+
+    if (activeMode === "letters") {
+      const randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
+      currentTarget = { display: randomChar, expected: randomChar };
+    } else {
+      if (masterPool.length === 0) {
+        alert("The designated word bank target pool is empty. Check configuration registry values.");
+        archiveAndReturn();
+        return;
+      }
+      currentTarget = masterPool[Math.floor(Math.random() * masterPool.length)];
+    }
+    
+    displayBox.innerText = currentTarget.display;
+    timeWindowAllocated = calculateWindow(currentTarget.expected.length);
+    timeTargetStarted = Date.now();
+    lastKeystrokeTimestamp = timeTargetStarted; 
+    
+    executeTimerAnimation(timeWindowAllocated);
+    inputField.focus();
+
+    timerTimeout = setTimeout(() => { triggerTimeoutFailure(); }, timeWindowAllocated);
+  }
+
+  function executeTimerAnimation(durationMs) {
+    timerBar.style.transition = 'none';
+    timerBar.style.width = '100%';
+    timerBar.offsetHeight; 
+    timerBar.style.transition = `width ${durationMs}ms linear`;
+    timerBar.style.width = '0%';
+  }
+
+  function triggerTimeoutFailure() {
+    const currentInputLen = inputField.value.length;
+    const expectedChar = currentTarget.expected[currentInputLen];
+    if (expectedChar && letterMetrics[expectedChar]) {
+      letterMetrics[expectedChar].total++;
+      letterMetrics[expectedChar].errors++;
+    }
+    handleFailure();
+  }
+
+  function handleFailure() {
+    isTransitioning = true;
+    clearTimeout(timerTimeout);
+    displayBox.className = 'error-strike';
+    renderMatrix();
+    transitionTimeout = setTimeout(() => { nextWord(); }, 180);
+  }
+
+  function togglePause() {
+    if (isTransitioning || launchedFromHome) return;
+    if (!isPaused) {
+      isPaused = true;
+      clearTimeout(timerTimeout);
+      const elapsed = Date.now() - timeTargetStarted;
+      timeRemainingOnPause = Math.max(0, timeWindowAllocated - elapsed);
+      timerBar.style.transition = 'none';
+      timerBar.style.width = window.getComputedStyle(timerBar).width;
+      displayBox.className = 'paused-display';
+      pauseSentinel.style.visibility = 'visible';
+      dossierToggleBtn.style.display = 'inline-block';
+      inputField.disabled = true;
+    } else {
+      isPaused = false;
+      displayBox.className = '';
+      pauseSentinel.style.visibility = 'hidden';
+      dossierToggleBtn.style.display = 'none';
+      analyticsOverlay.style.display = 'none';
+      inputField.disabled = false;
+      inputField.focus();
+      timeWindowAllocated = timeRemainingOnPause;
+      timeTargetStarted = Date.now();
+      lastKeystrokeTimestamp = Date.now(); 
+      executeTimerAnimation(timeRemainingOnPause);
+      timerTimeout = setTimeout(() => { triggerTimeoutFailure(); }, timeRemainingOnPause);
+    }
+  }
+
+  window.addEventListener('keydown', (e) => {
+    if (trainingArena.style.display !== 'block') return;
+    if (e.key === 'Escape') {
+      if (launchedFromHome) closeAnalyticsView(); else archiveAndReturn();
+      return;
+    }
+    if (e.key === 'Control') {
+      e.preventDefault();
+      togglePause();
+    }
+  });
+
+  trainingArena.addEventListener('click', () => {
+    if (!isPaused && !isTransitioning && !launchedFromHome) inputField.focus();
+  });
+
+  inputField.addEventListener('keydown', (e) => {
+    if (isTransitioning || isPaused || e.key === 'Control') return;
+    if (e.key.length !== 1 || e.ctrlKey || e.altKey) return;
+
+    const pressedKey = e.key.toLowerCase();
+    const expectedChar = currentTarget.expected[inputField.value.length];
+    const hitTime = Date.now();
+
+    if (expectedChar && letterMetrics[expectedChar]) letterMetrics[expectedChar].total++;
+    totalKeystrokes++;
+    
+    if (pressedKey !== expectedChar) {
+      incorrectKeystrokes++;
+      if (expectedChar && letterMetrics[expectedChar]) letterMetrics[expectedChar].errors++;
+      
+      errorMap.unshift(`Missed: pressed "${pressedKey}" instead of "${expectedChar || '[end]'}"`);
+      if (errorMap.length > 3) errorMap.pop();
+      errorLog.innerHTML = errorMap.join('<br>');
+      
+      accuracyVal.innerText = `${(((totalKeystrokes - incorrectKeystrokes) / totalKeystrokes) * 100).toFixed(1)}%`;
+      e.preventDefault();
+      handleFailure();
+    } else {
+      if (expectedChar && letterMetrics[expectedChar]) {
+        letterMetrics[expectedChar].latencies.push(hitTime - lastKeystrokeTimestamp);
+      }
+      lastKeystrokeTimestamp = hitTime; 
+      accuracyVal.innerText = `${(((totalKeystrokes - incorrectKeystrokes) / totalKeystrokes) * 100).toFixed(1)}%`;
+      if (activeMode === "letters" && pressedKey === currentTarget.expected) executeSuccess();
+    }
+  });
+
+  inputField.addEventListener('input', () => {
+    if (!currentTarget || isTransitioning || isPaused || activeMode === "letters") return;
+    if (inputField.value.toLowerCase() === currentTarget.expected) executeSuccess();
+  });
+
+  function executeSuccess() {
+    clearTimeout(timerTimeout);
+    isTransitioning = true;
+    displayBox.className = 'perfect-strike';
+    targetsCompleted++;
+    countVal.innerText = targetsCompleted;
+    renderMatrix();
+    transitionTimeout = setTimeout(() => { nextWord(); }, 150);
+  }
+
+  function archiveAndReturn() {
+    clearTimeout(timerTimeout);
+    clearTimeout(transitionTimeout);
+    saveSessionToHistory(); 
+    isPaused = false;
+    launchedFromHome = false;
+    analyticsOverlay.style.display = 'none';
+    dossierToggleBtn.style.display = 'none';
+    trainingArena.style.display = 'none';
+    setupPanel.style.display = 'block';
+    updateLaunchButtonLabel();
+  }
+
+  function startTraining(useFilters = true) {
+    activeMode = modeSelect.value;
+    if (activeMode === "words") {
+      prepareActivePool(useFilters);
+      if (masterPool.length === 0) {
+        alert(useFilters ? 
+          "Your filtering parameters match zero entries. Refine target constraints." : 
+          "Your global word bank is completely empty. Add entries inside the manager first.");
+        return;
+      }
+    }
+    resetSessionMetrics();
+    renderMatrix();
+    setupPanel.style.display = 'none';
+    wordManagerOverlay.style.display = 'none';
+    trainingArena.style.display = 'block';
+    setTimeout(() => { nextWord(); }, 20);
+  }
+
+  window.onload = loadBankFromStorage;
+</script>
+</body>
+</html>
