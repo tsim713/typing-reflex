@@ -205,9 +205,84 @@
   .matrix-cell.critical { color: #ff3366; }
 
   #error-log { margin-top: 15px; font-size: 12px; color: #ff5555; text-align: left; padding: 5px; background: #151515; border-radius: 4px; min-height: 18px; }
-  .nav-btn { background: #222; color: #888; border: 1px solid #333; padding: 8px 16px; font-size: 12px; cursor: pointer; margin-top: 20px; border-radius: 4px; display: inline-block; }
+  .nav-btn { background: #222; color: #888; border: 1px solid #333; padding: 8px 16px; font-size: 12px; cursor: pointer; margin-top: 0; border-radius: 4px; display: inline-block; }
   .nav-btn:hover { color: #fff; border-color: #505050; }
   #pause-sentinel { font-size: 12px; color: #00ffcc; margin-top: 10px; font-weight: bold; min-height: 15px; visibility: hidden; }
+
+  /* PAUSE MENU OVERLAY */
+  .hidden { display: none !important; }
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.88);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .pause-card {
+    text-align: center;
+    background: #1e1e1e;
+    padding: 2rem 3rem;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+    border: 1px solid #333;
+  }
+  .pause-actions {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .btn-resume { 
+    background-color: #00ffcc; 
+    color: #111; 
+    border: none; 
+    padding: 12px 24px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .btn-resume:hover { background-color: #00ccaa; }
+  
+  .btn-danger-pause { 
+    background-color: #d9534f; 
+    color: #fff; 
+    border: none; 
+    padding: 12px 24px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border-radius: 4px;
+    font-size: 13px;
+    letter-spacing: 0.5px;
+  }
+  .btn-danger-pause:hover { background-color: #c9302c; }
+
+  /* HIGH LEGIBILITY KBD TAGS */
+  kbd {
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-size: 0.9em;
+    font-weight: 800;
+    margin-right: 8px;
+    display: inline-block;
+    font-family: monospace;
+    letter-spacing: 0.5px;
+  }
+  .btn-resume kbd {
+    background: rgba(0, 0, 0, 0.18);
+    color: #111;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+  }
+  .btn-danger-pause kbd {
+    background: rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+  }
 
   /* FULLSCREEN DOSSIER OVERLAY SIZING */
   #analytics-overlay {
@@ -223,7 +298,7 @@
     box-sizing: border-box;
     padding: 40px 60px;
     text-align: left;
-    z-index: 1000;
+    z-index: 900;
     overflow-y: auto;
   }
   .view-tab-btn { background: #1c1c1c; color: #666; border: 1px solid #333; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: monospace; border-radius: 4px; }
@@ -305,7 +380,6 @@
     margin-top: 2px;
   }
   
-  /* COMPACT DANGER BUTTON */
   .danger-btn { 
     width: auto; 
     background: #222; 
@@ -377,14 +451,14 @@
   
   <div style="display:grid; grid-template-columns: 1fr 120px; gap: 15px; margin-bottom: 25px;">
     <div>
-      <label>Training Mode</label>
+      <label for="mode-select">Training Mode</label>
       <select id="mode-select" onchange="updateLaunchButtonLabel()">
         <option value="words">Word Bank Engine (Mask Pairs)</option>
         <option value="letters">Single-Letter Reflex Mode</option>
       </select>
     </div>
     <div>
-      <label>Target WPM</label>
+      <label for="wpm-input">Target WPM</label>
       <input type="number" id="wpm-input" value="60" min="10" max="300">
     </div>
   </div>
@@ -412,21 +486,21 @@
     
     <div class="form-row">
       <div>
-        <label>Word</label>
+        <label for="ins-word">Word</label>
         <input type="text" id="ins-word" placeholder="e.g., queen" oninput="autoDeriveProperties()">
       </div>
       <div>
-        <label>Mask Format</label>
+        <label for="ins-mask">Mask Format</label>
         <input type="text" id="ins-mask" placeholder="e.g., que_n">
       </div>
       <div>
-        <label># Letters</label>
+        <label for="ins-len"># Letters</label>
         <input type="number" id="ins-len" readonly style="background:#2a2a2a; color:#888;">
       </div>
     </div>
     <div class="form-row-three">
       <div>
-        <label>Finger Target</label>
+        <label for="ins-finger">Finger Target</label>
         <select id="ins-finger">
           <option value="left pinky">Left Pinky</option>
           <option value="left ring">Left Ring</option>
@@ -439,11 +513,11 @@
         </select>
       </div>
       <div>
-        <label>Target Letters</label>
+        <label for="ins-target-chars">Target Letters</label>
         <input type="text" id="ins-target-chars" placeholder="e.g., q, u">
       </div>
       <div>
-        <label>Starts With Cue</label>
+        <label for="ins-start">Starts With Cue</label>
         <input type="text" id="ins-start" placeholder="e.g., qu">
       </div>
     </div>
@@ -452,7 +526,7 @@
     <div style="font-size: 11px; color: #888; margin-bottom: 6px; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px;">Optional Target Set Filters:</div>
     <div class="filter-grid">
       <div>
-        <label>Finger Target</label>
+        <label for="flt-finger">Finger Target</label>
         <select id="flt-finger" onchange="updateVisibleBankTable()">
           <option value="">-- Clear Finger Filter --</option>
           <option value="left pinky">Left Pinky</option>
@@ -466,7 +540,7 @@
         </select>
       </div>
       <div>
-        <label>Starts With Sequence</label>
+        <label for="flt-start">Starts With Sequence</label>
         <input type="text" id="flt-start" placeholder="Filter cue starting context..." oninput="updateVisibleBankTable()">
       </div>
     </div>
@@ -563,12 +637,12 @@
     </div>
 
     <div style="text-align: right; margin-top: 15px;">
-      <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="margin-top: 0; border-color:#00ffcc; color:#00ffcc; font-size: 13px; padding: 10px 20px;">[Close]</div>
+      <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="border-color:#00ffcc; color:#00ffcc; font-size: 13px; padding: 10px 20px;">[Close]</div>
     </div>
   </div>
 
   <div id="display-box">-</div>
-  <div id="pause-sentinel">SYSTEM PAUSED - CLICK PAUSE/RESUME OR HIT CONTROL TO RESUME</div>
+  <div id="pause-sentinel">SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN</div>
   <input type="text" id="input-field" autocomplete="off" spellcheck="false">
   <div id="timer-bar-container"><div id="timer-bar"></div></div>
   
@@ -581,10 +655,35 @@
   <div id="matrix-title">Live Key Accuracy Matrix</div>
   <div id="accuracy-matrix"></div>
   
+  <!-- BOTTOM CONTROL BAR -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-    <div class="nav-btn" onclick="archiveAndReturn()" style="margin-top: 0;">[ESC] Save Run & Exit</div>
-    <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none; margin-top: 0;">View Macro Metrics</div>
-    <button id="pause-btn" onclick="togglePause()" style="width: auto; background: #222; color: #00ffcc; border: 1px solid #00ffcc; padding: 8px 18px; font-size: 11px;">Pause Session</button>
+    <button id="pause-btn" onclick="openPauseMenu()" style="width: auto; background: #3a3a3c; color: #fff; padding: 10px 20px; border-radius: 4px; border: 1px solid #555; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
+      <kbd>ESC</kbd> Pause Session
+    </button>
+    
+    <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none;">View Macro Metrics</div>
+
+    <button id="exit-btn" onclick="archiveAndReturn()" style="width: auto; background: #d9534f; color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
+      Save Run and Exit
+    </button>
+  </div>
+</div>
+
+<!-- PAUSE MENU OVERLAY -->
+<div id="pause-overlay" class="overlay hidden">
+  <div class="pause-card">
+    <h2 style="margin-bottom: 0.5rem; text-transform: uppercase; font-size: 20px; color: #fff;">Session Paused</h2>
+    <p style="color: #888; font-size: 0.9rem; margin-bottom: 1.5rem;">Drill timer and input logging frozen</p>
+
+    <div class="pause-actions">
+      <button id="resume-btn" class="btn-resume" onclick="resumeSession()">
+        <kbd>CTRL</kbd> Resume Session
+      </button>
+
+      <button id="save-exit-btn" class="btn-danger-pause" onclick="saveRunAndExit()">
+        <kbd>ESC</kbd> Save Run & Exit
+      </button>
+    </div>
   </div>
 </div>
 
@@ -610,11 +709,11 @@
   let isTransitioning = false; 
   let activeMode = "words";
   
+  let isArmed = false;
   let isPaused = false;
   let launchedFromHome = false;
   let timeWindowAllocated = 0;
   let timeTargetStarted = 0;
-  let timeRemainingOnPause = 0;
   let lastKeystrokeTimestamp = 0; 
   let currentDossierTab = 'runs';
   let editingRowIndex = null;
@@ -645,7 +744,7 @@
   const errorLog = document.getElementById('error-log');
   const accuracyMatrix = document.getElementById('accuracy-matrix');
   const pauseSentinel = document.getElementById('pause-sentinel');
-  const pauseBtn = document.getElementById('pause-btn');
+  const pauseOverlay = document.getElementById('pause-overlay');
   const analyticsOverlay = document.getElementById('analytics-overlay');
   const analyticsTimeline = document.getElementById('analytics-timeline-container');
   const analyticsKeysContainer = document.getElementById('analytics-keys-container');
@@ -845,7 +944,7 @@
       const serializedData = JSON.stringify(wordBank, null, 2);
       navigator.clipboard.writeText(serializedData).then(() => {
         alert("Word bank copied to clipboard as JSON.");
-      }).catch(err => {
+      }).catch(() => {
         const win = window.open();
         win.document.write('<pre>' + serializedData + '</pre>');
       });
@@ -1073,7 +1172,7 @@
       }
     }
 
-    // --- BUILD EXPANDED QWERTY HEAT MAP OVERLAY ---
+    // HEAT MAP OVERLAY RENDERING
     if (sortBy.startsWith('strike')) {
       heatmapActiveMetricLabel.innerText = "Mode: Strike Latency (ms)";
     } else if (sortBy.startsWith('latency')) {
@@ -1128,7 +1227,7 @@
       qwertyHeatmapGrid.appendChild(rowDiv);
     });
 
-    // --- SORT & RENDER SINGLE COLUMN LIST TELEMETRY ---
+    // SINGLE COLUMN LIST TELEMETRY
     if (sortBy === 'latency-desc') processedKeys.sort((a, b) => (b.avgHold || 0) - (a.avgHold || 0));
     else if (sortBy === 'latency-asc') processedKeys.sort((a, b) => (a.avgHold ?? Infinity) - (b.avgHold ?? Infinity));
     else if (sortBy === 'strike-desc') processedKeys.sort((a, b) => (b.avgStrikeLatency || 0) - (a.avgStrikeLatency || 0));
@@ -1284,9 +1383,7 @@
     isPaused = false;
     displayBox.className = ''; 
     pauseSentinel.style.visibility = 'hidden';
-    pauseBtn.innerText = "Pause Session";
-    pauseBtn.style.borderColor = "#00ffcc";
-    pauseBtn.style.color = "#00ffcc";
+    pauseOverlay.classList.add('hidden');
     inputField.disabled = false;
 
     if (activeMode === "letters") {
@@ -1338,67 +1435,85 @@
     transitionTimeout = setTimeout(() => { nextWord(); }, 180);
   }
 
-  function togglePause() {
-    if (isTransitioning || launchedFromHome) return;
-    if (!isPaused) {
-      isPaused = true;
-      clearTimeout(timerTimeout);
-      const elapsed = Date.now() - timeTargetStarted;
-      timeRemainingOnPause = Math.max(0, timeWindowAllocated - elapsed);
-      timerBar.style.transition = 'none';
-      timerBar.style.width = window.getComputedStyle(timerBar).width;
-      displayBox.className = 'paused-display';
-      pauseSentinel.style.visibility = 'visible';
-      pauseBtn.innerText = "Resume Session";
-      pauseBtn.style.borderColor = "#ffaa00";
-      pauseBtn.style.color = "#ffaa00";
-      dossierToggleBtn.style.display = 'inline-block';
-      inputField.disabled = true;
-    } else {
-      isPaused = false;
-      displayBox.className = '';
-      pauseSentinel.style.visibility = 'hidden';
-      pauseBtn.innerText = "Pause Session";
-      pauseBtn.style.borderColor = "#00ffcc";
-      pauseBtn.style.color = "#00ffcc";
-      dossierToggleBtn.style.display = 'none';
-      analyticsOverlay.style.display = 'none';
-      inputField.disabled = false;
-      inputField.focus();
-      timeWindowAllocated = timeRemainingOnPause;
-      timeTargetStarted = Date.now();
-      lastKeystrokeTimestamp = Date.now(); 
-      executeTimerAnimation(timeRemainingOnPause);
-      timerTimeout = setTimeout(() => { triggerTimeoutFailure(); }, timeRemainingOnPause);
-    }
+  /* PAUSE LOGIC */
+  function openPauseMenu() {
+    if (isTransitioning || launchedFromHome || isArmed) return;
+    isPaused = true;
+    clearTimeout(timerTimeout);
+    
+    timerBar.style.transition = 'none';
+    timerBar.style.width = '100%';
+    
+    displayBox.className = 'paused-display';
+    dossierToggleBtn.style.display = 'inline-block';
+    inputField.disabled = true;
+    pauseOverlay.classList.remove('hidden');
   }
 
-  window.addEventListener('keydown', (e) => {
+  /* RESUME LOGIC (Transitions to ARMED state) */
+  function resumeSession() {
+    isPaused = false;
+    isArmed = true;
+    
+    dossierToggleBtn.style.display = 'none';
+    analyticsOverlay.style.display = 'none';
+    pauseOverlay.classList.add('hidden');
+    inputField.disabled = true;
+
+    displayBox.innerText = "READY";
+    displayBox.className = "paused-display";
+    pauseSentinel.style.visibility = 'visible';
+    pauseSentinel.innerText = "SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN";
+  }
+
+  function saveRunAndExit() {
+    archiveAndReturn();
+  }
+
+  /* KEYBOARD INPUT INTERCEPTOR */
+  document.addEventListener('keydown', (event) => {
     if (trainingArena.style.display !== 'block') return;
-    if (e.key === 'Escape') {
-      if (launchedFromHome) closeAnalyticsView(); else archiveAndReturn();
+
+    if (event.code === 'Space' && isArmed) {
+      event.preventDefault();
+      isArmed = false;
+      displayBox.className = '';
+      pauseSentinel.style.visibility = 'hidden';
+      inputField.disabled = false;
+      nextWord();
       return;
     }
-    if (e.key === 'Control') {
-      e.preventDefault();
-      togglePause();
+
+    if (isArmed) return;
+
+    if (!isPaused) {
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        openPauseMenu();
+      }
+    } else {
+      if (event.key === 'Control') {
+        event.preventDefault();
+        resumeSession();
+      } else if (event.key === 'Escape') {
+        event.preventDefault();
+        saveRunAndExit();
+      }
     }
   });
 
   trainingArena.addEventListener('click', () => {
-    if (!isPaused && !isTransitioning && !launchedFromHome) inputField.focus();
+    if (!isArmed && !isPaused && !isTransitioning && !launchedFromHome) inputField.focus();
   });
 
   inputField.addEventListener('keydown', (e) => {
-    if (isTransitioning || isPaused || e.key === 'Control') return;
+    if (isArmed || isTransitioning || isPaused || e.key === 'Control' || e.key === 'Escape') return;
     if (e.key.length !== 1 || e.ctrlKey || e.altKey) return;
 
     const pressedKey = e.key.toLowerCase();
     const hitTime = Date.now();
 
-    if (!activeKeyDownTimes[pressedKey]) {
-      activeKeyDownTimes[pressedKey] = hitTime;
-    }
+    activeKeyDownTimes[pressedKey] = hitTime;
 
     const expectedChar = currentTarget.expected[inputField.value.length];
 
@@ -1445,7 +1560,7 @@
   });
 
   inputField.addEventListener('input', () => {
-    if (!currentTarget || isTransitioning || isPaused || activeMode === "letters") return;
+    if (isArmed || !currentTarget || isTransitioning || isPaused || activeMode === "letters") return;
     if (inputField.value.toLowerCase() === currentTarget.expected) executeSuccess();
   });
 
@@ -1463,8 +1578,10 @@
     clearTimeout(timerTimeout);
     clearTimeout(transitionTimeout);
     saveSessionToHistory(); 
+    isArmed = false;
     isPaused = false;
     launchedFromHome = false;
+    pauseOverlay.classList.add('hidden');
     analyticsOverlay.style.display = 'none';
     dossierToggleBtn.style.display = 'none';
     trainingArena.style.display = 'none';
@@ -1488,7 +1605,13 @@
     setupPanel.style.display = 'none';
     wordManagerOverlay.style.display = 'none';
     trainingArena.style.display = 'block';
-    setTimeout(() => { nextWord(); }, 20);
+
+    isArmed = true;
+    displayBox.innerText = "READY";
+    displayBox.className = "paused-display";
+    pauseSentinel.style.visibility = 'visible';
+    pauseSentinel.innerText = "SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN";
+    inputField.disabled = true;
   }
 
   window.onload = loadBankFromStorage;
