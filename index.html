@@ -1073,9 +1073,11 @@
     history.forEach(run => {
       const row = document.createElement('div');
       row.className = 'history-log-row';
-      let colorClass = 'good';
-      if (parseFloat(run.accuracy) < 85) colorClass = 'low';
-      else if (parseFloat(run.accuracy) < 95) colorClass = 'mid';
+      
+      const acc = parseFloat(run.accuracy);
+      let colorClass = 'good'; // Green
+      if (acc <= 83.9) colorClass = 'low';      // Red
+      else if (acc <= 93.9) colorClass = 'mid'; // Orange
       
       row.innerHTML = `
         <span class="history-timestamp">[${run.timestamp}]</span> 
@@ -1087,6 +1089,13 @@
       `;
       analyticsTimeline.appendChild(row);
     });
+  }
+
+  function getAccuracyMetricColor(val) {
+    if (val === null || val === undefined || isNaN(val)) return '#888';
+    if (val >= 94.0) return '#00ffcc'; // Green
+    if (val >= 84.0) return '#ffaa00'; // Orange
+    return '#ff3366';                  // Red
   }
 
   function getMetricColor(value, allValues, lowerIsBetter = true) {
@@ -1148,7 +1157,6 @@
 
     let allHolds = [];
     let allStrikes = [];
-    let allAccs = [];
 
     for (let char of alphabet) {
       const stats = aggregatedKeys[char];
@@ -1162,7 +1170,6 @@
 
       if (avgHold !== null) allHolds.push(avgHold);
       if (avgStrikeLatency !== null) allStrikes.push(avgStrikeLatency);
-      if (stats.totalAttempts > 0) allAccs.push(macroAcc);
 
       const keyObj = { char, macroAcc, avgHold, avgStrikeLatency, totalHolds, totalStrikes, totalAttempts: stats.totalAttempts };
       keyLookupMap[char] = keyObj;
@@ -1210,7 +1217,7 @@
           } else {
             if (keyData.totalAttempts > 0) {
               displayValStr = `${keyData.macroAcc.toFixed(1)}%`;
-              textColor = getMetricColor(keyData.macroAcc, allAccs, false);
+              textColor = getAccuracyMetricColor(keyData.macroAcc);
               bgStyle = `${textColor}22`;
             }
           }
@@ -1245,7 +1252,7 @@
     grid.className = 'macro-grid';
 
     processedKeys.forEach(item => {
-      const accColor = item.totalAttempts > 0 ? getMetricColor(item.macroAcc, allAccs, false) : '#888';
+      const accColor = item.totalAttempts > 0 ? getAccuracyMetricColor(item.macroAcc) : '#888';
       const strikeColor = item.avgStrikeLatency !== null ? getMetricColor(item.avgStrikeLatency, allStrikes, true) : '#888';
       const holdColor = item.avgHold !== null ? getMetricColor(item.avgHold, allHolds, true) : '#888';
 
@@ -1363,9 +1370,9 @@
         const pct = ((data.total - data.errors) / data.total) * 100;
         displayVal = `${pct.toFixed(1)}%`;
         
-        if (pct === 100) cellClass = 'perfect';
-        else if (pct >= 85) cellClass = 'warn';
-        else cellClass = 'critical';
+        if (pct >= 94.0) cellClass = 'perfect';        // Green
+        else if (pct >= 84.0) cellClass = 'warn';      // Orange
+        else cellClass = 'critical';                   // Red
       }
 
       const cell = document.createElement('div');
