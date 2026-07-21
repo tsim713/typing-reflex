@@ -140,16 +140,11 @@
     color: #ccc;
     vertical-align: middle;
   }
-  .bank-table input, .bank-table select {
-    padding: 4px;
-    font-size: 11px;
-    background: #111;
-  }
   .bank-table tr:hover { background: #1c1c1c; }
   .action-cell { text-align: center; color: #ff3366; cursor: pointer; font-size: 13px; }
   .edit-cell { text-align: center; color: #00ffcc; cursor: pointer; font-size: 13px; }
 
-  #training-arena { display: none; text-align: center; width: 550px; position: relative; }
+  #training-arena { display: none; text-align: center; width: 650px; position: relative; }
   
   #display-box { 
     font-size: 72px; 
@@ -214,13 +209,14 @@
   .nav-btn:hover { color: #fff; border-color: #505050; }
   #pause-sentinel { font-size: 12px; color: #00ffcc; margin-top: 10px; font-weight: bold; min-height: 15px; visibility: hidden; }
 
+  /* EXPANDED DOSSIER WINDOW */
   #analytics-overlay {
     display: none;
     position: absolute;
-    top: -10px;
-    left: -10px;
-    width: calc(100% + 20px);
-    height: calc(100% + 20px);
+    top: -20px;
+    left: -225px;
+    width: 1100px;
+    max-height: 85vh;
     background: rgba(20, 20, 20, 0.98);
     border-radius: 8px;
     border: 1px solid #00ffcc;
@@ -232,21 +228,124 @@
   }
   .view-tab-btn { background: #1c1c1c; color: #666; border: 1px solid #333; padding: 6px 12px; font-size: 11px; cursor: pointer; font-family: monospace; }
   .view-tab-btn.active { background: #252525; color: #00ffcc; border-color: #00ffcc; }
-  .history-log-row { font-size: 12px; border-bottom: 1px solid #222; padding: 6px 0; display: flex; justify-content: space-between; color: #ccc; }
+  .history-log-row { font-size: 12px; border-bottom: 1px solid #222; padding: 8px 0; display: flex; justify-content: space-between; color: #ccc; }
   .history-timestamp { color: #666; }
   .history-pct { font-weight: bold; }
   .history-pct.good { color: #00ffcc; }
   .history-pct.mid { color: #ffaa00; }
   .history-pct.low { color: #ff3366; }
 
-  .macro-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
-  .macro-card { background: #161616; border: 1px solid #252525; padding: 8px; border-radius: 4px; font-size: 12px; }
-  .macro-card-header { display: flex; justify-content: space-between; border-bottom: 1px solid #222; padding-bottom: 4px; margin-bottom: 6px; }
-  .danger-btn { background: #222; color: #ff3366; border: 1px solid #443333; padding: 5px 10px; font-size: 11px; cursor: pointer; border-radius: 4px; }
+  /* TIGHTENED 2-COLUMN MACRO GRID LISTINGS */
+  .macro-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .macro-card { 
+    background: #161616; 
+    border: 1px solid #282828; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    font-size: 11px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+  }
+  .macro-card:hover { border-color: #383838; }
+  .macro-card-key {
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    background: #222;
+    border: 1px solid #444;
+    padding: 4px 10px;
+    border-radius: 4px;
+    min-width: 20px;
+    text-align: center;
+  }
+  .macro-card-metrics {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .metric-item {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  .metric-label {
+    font-size: 8px;
+    color: #666;
+    text-transform: uppercase;
+    margin-bottom: 2px;
+    letter-spacing: 0.5px;
+  }
+  .metric-val {
+    font-size: 12px;
+    font-weight: bold;
+    color: #eee;
+  }
+  
+  /* COMPACT DANGER BUTTON */
+  .danger-btn { 
+    width: auto; 
+    background: #222; 
+    color: #ff3366; 
+    border: 1px solid #443333; 
+    padding: 5px 12px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    border-radius: 4px;
+  }
   .danger-btn:hover { background: #331a22; border-color: #ff3366; }
   
   .home-headline { font-size: 20px; font-weight: bold; color: #fff; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1.5px;}
   .export-panel { background: #151515; border: 1px solid #252525; padding: 12px; border-radius: 4px; display: flex; gap: 15px; align-items: center; justify-content: space-between; margin-top: 15px;}
+
+  /* EXPANDED QWERTY KEYBOARD MAP STYLES */
+  #keyboard-heatmap-wrapper {
+    background: #141414;
+    border: 1px solid #282828;
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .heatmap-legend {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #888;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .qwerty-row {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 6px;
+  }
+  .qwerty-key {
+    background: #1e1e1e;
+    border: 1px solid #333;
+    border-radius: 5px;
+    width: 54px;
+    height: 54px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+  }
+  .qwerty-key-cap {
+    font-size: 13px;
+    font-weight: bold;
+    color: #eee;
+    line-height: 1;
+  }
+  .qwerty-key-val {
+    font-size: 10px;
+    margin-top: 4px;
+    line-height: 1;
+    color: #888;
+  }
 </style>
 </head>
 <body>
@@ -282,7 +381,6 @@
 <div id="word-manager-overlay" class="fullscreen-overlay">
   <div class="overlay-content-card">
 
-    <!-- Title and Return Button -->
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;">
       <div class="manager-title" style="margin-bottom: 0;">Master Word Bank Manager</div>
       <button onclick="document.getElementById('word-manager-overlay').style.display='none'" 
@@ -373,26 +471,24 @@
         <tbody id="bank-table-body"></tbody>
       </table>
     </div>
-  </div> <!-- CLOSES overlay-content-card -->
-</div> <!-- CLOSES word-manager-overlay -->
 
-   <!-- DATA PORTABILITY HUB (EXPORT / IMPORT) -->
+    <!-- DATA PORTABILITY HUB -->
     <div class="export-panel" style="flex-direction: column; align-items: stretch; gap: 15px;">
       <div style="font-size: 12px; color: #aaa; border-bottom: 1px solid #252525; padding-bottom: 8px;">
-        <strong>Database Portability Hub:</strong> Export copies of your registry to your clipboard, or paste a backup string below to restore your master word bank.
+        <strong>Database Portability Hub:</strong> Export copies of your registry, or paste a backup string below to restore.
       </div>
-      
       <div style="display: flex; gap: 15px; align-items: center; justify-content: space-between;">
-        <span style="font-size: 11px; color: #888;">Step 1: Save a cold backup copy of your data</span>
+        <span style="font-size: 11px; color: #888;">Step 1: Save a backup copy</span>
         <button onclick="exportWordBankJSON()" style="width: auto; padding: 8px 16px; background: #1c1c1c; color: #00ffcc; border: 1px solid #00ffcc;">Export Word Bank JSON</button>
       </div>
-
       <div style="margin-top: 5px;">
-        <label for="import-string-input">Step 2: Paste your backup JSON text string below to restore or sync</label>
-        <textarea id="import-string-input" placeholder='Paste your backup text here... e.g., [{"word": "queen", ...}]' style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #333; font-family: monospace; font-size: 11px; box-sizing: border-box; padding: 8px; border-radius: 4px; resize: none; margin-bottom: 8px;"></textarea>
+        <label for="import-string-input">Step 2: Paste backup JSON text below to restore</label>
+        <textarea id="import-string-input" placeholder='Paste backup text here...' style="width: 100%; height: 60px; background: #111; color: #fff; border: 1px solid #333; font-family: monospace; font-size: 11px; box-sizing: border-box; padding: 8px; border-radius: 4px; resize: none; margin-bottom: 8px;"></textarea>
         <button onclick="importWordBankJSON()" style="background: #222; color: #ffaa00; border: 1px solid #ffaa00; padding: 8px 16px; width: auto; display: block; margin-left: auto;">Import & Process Backup</button>
       </div>
     </div>
+  </div> 
+</div>
 
 <!-- LIVE DRILL ARENA SCREEN -->
 <div id="training-arena">
@@ -416,17 +512,31 @@
         </select>
       </div>
       <div style="display: flex; flex-direction: column; gap: 4px;">
-        <label for="sortBy" style="font-size: 11px; margin-bottom: 0;">Sort By:</label>
+        <label for="sortBy" style="font-size: 11px; margin-bottom: 0;">Sort / Heat Map View:</label>
         <select id="sortBy" onchange="displayKeyTelemetryTrends()" style="padding: 4px 8px; margin-bottom: 0; font-size: 12px; width: auto;">
           <option value="key">Key (A-Z)</option>
-          <option value="latency-desc">Strike Latency (High to Low)</option>
           <option value="acc-desc">Macro Accuracy (High to Low)</option>
+          <option value="strike-desc">Strike Latency (High to Low)</option>
+          <option value="latency-desc">Hold Duration (High to Low)</option>
         </select>
       </div>
     </div>
 
-    <div id="analytics-timeline-container" style="max-height: 290px; overflow-y: auto; margin-bottom: 15px;"></div>
-    <div id="analytics-keys-container" style="max-height: 290px; overflow-y: auto; margin-bottom: 15px; display: none;"></div>
+    <div id="analytics-timeline-container" style="max-height: 450px; overflow-y: auto; margin-bottom: 15px;"></div>
+    
+    <div id="analytics-keys-container" style="display: none;">
+      <!-- QWERTY Heatmap Overlay -->
+      <div id="keyboard-heatmap-wrapper">
+        <div class="heatmap-legend">
+          <span>QWERTY Visual Telemetry Heat Map</span>
+          <span id="heatmap-active-metric-label" style="color: #00ffcc;">Mode: Macro Accuracy</span>
+        </div>
+        <div id="qwerty-heatmap-grid"></div>
+      </div>
+
+      <!-- Preserved & Refined List Form Container -->
+      <div id="analytics-keys-list-container" style="max-height: 260px; overflow-y: auto; margin-bottom: 15px;"></div>
+    </div>
 
     <div style="text-align: right;">
       <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="margin-top: 0; border-color:#00ffcc; color:#00ffcc;">[Close]</div>
@@ -434,23 +544,23 @@
   </div>
 
   <div id="display-box">-</div>
-  <div id="pause-sentinel">SYSTEM PAUSED - HIT CONTROL TO RESUME</div>
+  <div id="pause-sentinel">SYSTEM PAUSED - CLICK PAUSE/RESUME OR HIT CONTROL TO RESUME</div>
   <input type="text" id="input-field" autocomplete="off" spellcheck="false">
   <div id="timer-bar-container"><div id="timer-bar"></div></div>
   
   <div id="metrics-panel">
-    <div>Session Accuracy: <span id="accuracy-val" class="metric-value">100%</span></div>
+    <div>Session Accuracy: <span id="accuracy-val" class="metric-value">100.0%</span></div>
     <div>Session Targets: <span id="count-val" class="metric-value">0</span></div>
   </div>
   
   <div id="error-log">Telemetry Log: Ready...</div>
-  <div id="matrix-title">Live Session Letter Accuracy</div>
+  <div id="matrix-title">Live Key Accuracy Matrix</div>
   <div id="accuracy-matrix"></div>
   
-  <div style="display: flex; justify-content: space-between; align-items: center;">
-    <div class="nav-btn" onclick="archiveAndReturn()">[ESC] Save Run & Exit</div>
-    <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none;">View Macro Metrics</div>
-    <div style="font-size: 11px; color: #444; margin-top: 20px;">[CTRL] Pause/Resume</div>
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+    <div class="nav-btn" onclick="archiveAndReturn()" style="margin-top: 0;">[ESC] Save Run & Exit</div>
+    <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none; margin-top: 0;">View Macro Metrics</div>
+    <button id="pause-btn" onclick="togglePause()" style="width: auto; background: #222; color: #00ffcc; border: 1px solid #00ffcc; padding: 6px 16px; font-size: 11px;">Pause Session</button>
   </div>
 </div>
 
@@ -460,6 +570,12 @@
     { word: "quantum", mask: "quan_um", letters: 7, finger: "left pinky", targets: "q", starts: "quan" },
     { word: "system", mask: "sys_em", letters: 6, finger: "left ring", targets: "s", starts: "sy" },
     { word: "theory", mask: "the_ry", letters: 6, finger: "left index", targets: "t", starts: "the" }
+  ];
+
+  const qwertyLayout = [
+    ["q", "w", "e", "r", "t", "y", "u", "i", "o", "p"],
+    ["a", "s", "d", "f", "g", "h", "j", "k", "l"],
+    ["z", "x", "c", "v", "b", "n", "m"]
   ];
 
   let wordBank = [];
@@ -477,13 +593,16 @@
   let timeRemainingOnPause = 0;
   let lastKeystrokeTimestamp = 0; 
   let currentDossierTab = 'runs';
-  let editingRowIndex = null; // Tracks row index currently being edited
+  let editingRowIndex = null;
 
   let totalKeystrokes = 0;
   let incorrectKeystrokes = 0;
   let targetsCompleted = 0;
   let errorMap = [];
   let letterMetrics = {};
+  let activeKeyDownTimes = {}; 
+  
+  let globalHoldBaselines = {};
 
   const setupPanel = document.getElementById('setup-panel');
   const trainingArena = document.getElementById('training-arena');
@@ -501,15 +620,35 @@
   const errorLog = document.getElementById('error-log');
   const accuracyMatrix = document.getElementById('accuracy-matrix');
   const pauseSentinel = document.getElementById('pause-sentinel');
+  const pauseBtn = document.getElementById('pause-btn');
   const analyticsOverlay = document.getElementById('analytics-overlay');
   const analyticsTimeline = document.getElementById('analytics-timeline-container');
   const analyticsKeysContainer = document.getElementById('analytics-keys-container');
+  const analyticsKeysListContainer = document.getElementById('analytics-keys-list-container');
+  const qwertyHeatmapGrid = document.getElementById('qwerty-heatmap-grid');
+  const heatmapActiveMetricLabel = document.getElementById('heatmap-active-metric-label');
   const dossierToggleBtn = document.getElementById('dossier-toggle-btn');
   const dossierCloseBtn = document.getElementById('dossier-close-btn');
 
   const alphabet = "abcdefghijklmnopqrstuvwxyz";
 
-  // --- SUB-SCREEN OVERLAY TOGGLE ---
+  function loadHoldBaselines() {
+    const raw = localStorage.getItem('reflex_key_baselines_v1');
+    if (raw) {
+      globalHoldBaselines = JSON.parse(raw);
+    } else {
+      globalHoldBaselines = {};
+      for (let char of alphabet) {
+        globalHoldBaselines[char] = [];
+      }
+      saveHoldBaselines();
+    }
+  }
+
+  function saveHoldBaselines() {
+    localStorage.setItem('reflex_key_baselines_v1', JSON.stringify(globalHoldBaselines));
+  }
+
   function toggleWordManagerOverlay(show) {
     if (show) {
       editingRowIndex = null;
@@ -520,7 +659,6 @@
     }
   }
 
-  // --- LOCAL PERSISTENCE SYSTEM ---
   function loadBankFromStorage() {
     const raw = localStorage.getItem('reflex_word_bank_v1');
     if (raw) {
@@ -530,6 +668,7 @@
       saveBankToStorage();
     }
     updateLaunchButtonLabel();
+    loadHoldBaselines();
   }
 
   function saveBankToStorage() {
@@ -559,7 +698,6 @@
     }
 
     const letters = word.length;
-
     wordBank.push({ word, mask, letters, finger, targets, starts });
     saveBankToStorage();
     updateVisibleBankTable();
@@ -571,10 +709,8 @@
     document.getElementById('ins-start').value = "";
   }
 
-  // --- EDIT & UPDATE MECHANICS ---
   function toggleEditRow(idx) {
     if (editingRowIndex === idx) {
-      // Save current changes out of inline form fields
       const filtered = getFilteredAndSortedBank(true);
       const targetItem = filtered[idx];
       const realIndex = wordBank.findIndex(item => item === targetItem);
@@ -642,7 +778,6 @@
       const tr = document.createElement('tr');
       
       if (editingRowIndex === idx) {
-        // Display interactive inputs inside fields for the edited entry
         tr.innerHTML = `
           <td><input type="text" id="edit-word-${idx}" value="${item.word}" style="width:90px;"></td>
           <td><input type="text" id="edit-mask-${idx}" value="${item.mask}" style="width:90px;"></td>
@@ -665,7 +800,6 @@
           <td class="action-cell" onclick="deleteWord(${idx})">✖</td>
         `;
       } else {
-        // Standard scannable layout row
         tr.innerHTML = `
           <td><strong>${item.word}</strong></td>
           <td>${item.mask}</td>
@@ -681,15 +815,12 @@
     });
   }
 
-  // --- DATA EXPORT UTILITY ---
   function exportWordBankJSON() {
     try {
       const serializedData = JSON.stringify(wordBank, null, 2);
       navigator.clipboard.writeText(serializedData).then(() => {
-        alert("Word bank database successfully parsed and copied to your clipboard as an organized JSON string array.");
+        alert("Word bank copied to clipboard as JSON.");
       }).catch(err => {
-        console.error('Could not copy string out: ', err);
-        // Fallback fallback output if clipboard API blocks security context
         const win = window.open();
         win.document.write('<pre>' + serializedData + '</pre>');
       });
@@ -698,52 +829,33 @@
     }
   }
 
-function importWordBankJSON() {
+  function importWordBankJSON() {
     const inputArea = document.getElementById('import-string-input');
     const rawData = inputArea.value.trim();
 
     if (!rawData) {
-      alert("The import field is completely empty. Please paste a valid backup text string first.");
+      alert("Import field is empty.");
       return;
     }
 
     try {
-      // Step 1: Attempt to safely parse the raw text back into a real JavaScript list
       const parsedData = JSON.parse(rawData);
-
-      // Step 2: Validate that the structure inside is actually a list array
       if (!Array.isArray(parsedData)) {
-        alert("Import Failure: The text provided isn't a structured list format. Make sure it begins with [ and ends with ].");
+        alert("Import Failure: Text must be a structured JSON array.");
         return;
       }
 
-      // Step 3: Run a light sanity check to ensure the items look like word entries
-      if (parsedData.length > 0 && (!parsedData[0].hasOwnProperty('word') || !parsedData[0].hasOwnProperty('mask'))) {
-        alert("Import Failure: The entries are missing crucial 'word' or 'mask' labels. Double check your source text.");
-        return;
-      }
-
-      // Step 4: Ask for absolute confirmation before overwriting active memory
-      const confirmation = confirm(`System found ${parsedData.length} words in this backup payload. Do you want to load them into your master registry? This will replace your current active view.`);
-      
+      const confirmation = confirm(`Import ${parsedData.length} words into registry?`);
       if (confirmation) {
-        // Commit directly to active state and browser memory
         wordBank = parsedData;
         saveBankToStorage();
-        
-        // Refresh our table interface to instantly show the imported list
         updateVisibleBankTable();
         updateLaunchButtonLabel();
-        
-        // Clear out the input field so it's clean for next time
         inputArea.value = "";
-        alert("Database successfully restored! Your master word bank is synchronized.");
+        alert("Database restored successfully!");
       }
-
     } catch (error) {
-      // If a comma or bracket was broken, the JSON parser triggers a catch event
-      console.error(error);
-      alert("Parsing Failure: The text contains a structural formatting error (likely a missing comma, unclosed quote, or broken bracket). Check your backup file.");
+      alert("Parsing Failure: Text contains structural JSON formatting errors.");
     }
   }
 
@@ -756,17 +868,17 @@ function importWordBankJSON() {
     });
   }
 
-  // --- ENGINE RUN HISTORIES & KEY TELEMETRY ---
   function resetSessionMetrics() {
     totalKeystrokes = 0;
     incorrectKeystrokes = 0;
     targetsCompleted = 0;
     errorMap = [];
     letterMetrics = {};
+    activeKeyDownTimes = {};
     for (let char of alphabet) {
       letterMetrics[char] = { total: 0, errors: 0, latencies: [] };
     }
-    accuracyVal.innerText = "100%";
+    accuracyVal.innerText = "100.0%";
     countVal.innerText = "0";
     errorLog.innerHTML = "Telemetry Log: Ready...";
   }
@@ -850,7 +962,9 @@ function importWordBankJSON() {
   }
 
   function displayKeyTelemetryTrends() {
-    analyticsKeysContainer.innerHTML = '';
+    analyticsKeysListContainer.innerHTML = '';
+    qwertyHeatmapGrid.innerHTML = '';
+    
     const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
     const timePeriod = document.getElementById('timePeriod')?.value || 'all';
     const sortBy = document.getElementById('sortBy')?.value || 'key';
@@ -862,7 +976,9 @@ function importWordBankJSON() {
     else if (timePeriod === '30d') cutoffTime = now - (30 * 24 * 60 * 60 * 1000);
 
     const aggregatedKeys = {};
-    for (let char of alphabet) { aggregatedKeys[char] = { totalAttempts: 0, totalErrors: 0, allLatencies: [] }; }
+    for (let char of alphabet) { 
+      aggregatedKeys[char] = { totalAttempts: 0, totalErrors: 0, latencies: [] }; 
+    }
 
     history.forEach(run => {
       if (!run.letterData) return;
@@ -874,30 +990,103 @@ function importWordBankJSON() {
           aggregatedKeys[char].totalAttempts += run.letterData[char].total;
           aggregatedKeys[char].totalErrors += run.letterData[char].errors;
           if (run.letterData[char].latencies) {
-            aggregatedKeys[char].allLatencies = aggregatedKeys[char].allLatencies.concat(run.letterData[char].latencies);
+            aggregatedKeys[char].latencies.push(...run.letterData[char].latencies);
           }
         }
       }
     });
 
     let processedKeys = [];
+    let keyLookupMap = {};
+
     for (let char of alphabet) {
       const stats = aggregatedKeys[char];
-      if (stats.totalAttempts === 0) continue;
-      const macroAcc = ((stats.totalAttempts - stats.totalErrors) / stats.totalAttempts) * 100;
-      let avgLatency = 0;
-      if (stats.allLatencies.length > 0) {
-        avgLatency = stats.allLatencies.reduce((a, b) => a + b, 0) / stats.allLatencies.length;
+      const holds = globalHoldBaselines[char] || [];
+      const totalHolds = holds.length;
+      const totalStrikes = stats.latencies.length;
+
+      const macroAcc = stats.totalAttempts > 0 ? ((stats.totalAttempts - stats.totalErrors) / stats.totalAttempts) * 100 : 100;
+      let avgHold = totalHolds > 0 ? (holds.reduce((a, b) => a + b, 0) / totalHolds) : 0;
+      let avgStrikeLatency = totalStrikes > 0 ? (stats.latencies.reduce((a, b) => a + b, 0) / totalStrikes) : 0;
+
+      const keyObj = { char, macroAcc, avgHold, avgStrikeLatency, totalHolds, totalStrikes, totalAttempts: stats.totalAttempts };
+      keyLookupMap[char] = keyObj;
+
+      if (stats.totalAttempts > 0 || totalHolds > 0) {
+        processedKeys.push(keyObj);
       }
-      processedKeys.push({ char, macroAcc, avgLatency, totalAttempts: stats.totalAttempts });
     }
 
-    if (sortBy === 'latency-desc') processedKeys.sort((a, b) => b.avgLatency - a.avgLatency);
+    // --- BUILD EXPANDED QWERTY HEAT MAP OVERLAY ---
+    if (sortBy === 'strike-desc') {
+      heatmapActiveMetricLabel.innerText = "Mode: Strike Latency (ms)";
+    } else if (sortBy === 'latency-desc') {
+      heatmapActiveMetricLabel.innerText = "Mode: Hold Duration (ms)";
+    } else {
+      heatmapActiveMetricLabel.innerText = "Mode: Macro Accuracy (%)";
+    }
+
+    qwertyLayout.forEach(row => {
+      const rowDiv = document.createElement('div');
+      rowDiv.className = 'qwerty-row';
+
+      row.forEach(char => {
+        const keyData = keyLookupMap[char];
+        const keyDiv = document.createElement('div');
+        keyDiv.className = 'qwerty-key';
+
+        let displayValStr = '---';
+        let bgStyle = '#1e1e1e';
+        let textColor = '#aaa';
+
+        if (keyData) {
+          if (sortBy === 'strike-desc') {
+            if (keyData.totalStrikes >= 50) {
+              displayValStr = `${Math.round(keyData.avgStrikeLatency)}ms`;
+            } else if (keyData.totalStrikes > 0) {
+              displayValStr = `${keyData.totalStrikes}/50`;
+            }
+          } else if (sortBy === 'latency-desc') {
+            if (keyData.totalHolds >= 50) {
+              displayValStr = `${Math.round(keyData.avgHold)}ms`;
+            } else if (keyData.totalHolds > 0) {
+              displayValStr = `${keyData.totalHolds}/50`;
+            }
+          } else {
+            if (keyData.totalAttempts > 0) {
+              displayValStr = `${keyData.macroAcc.toFixed(1)}%`;
+              if (keyData.macroAcc === 100) {
+                bgStyle = 'rgba(0, 255, 204, 0.2)';
+                textColor = '#00ffcc';
+              } else if (keyData.macroAcc >= 85) {
+                bgStyle = 'rgba(255, 170, 0, 0.25)';
+                textColor = '#ffaa00';
+              } else {
+                bgStyle = 'rgba(255, 51, 102, 0.35)';
+                textColor = '#ff3366';
+              }
+            }
+          }
+        }
+
+        keyDiv.style.background = bgStyle;
+        keyDiv.innerHTML = `
+          <div class="qwerty-key-cap">${char.toUpperCase()}</div>
+          <div class="qwerty-key-val" style="color:${textColor}">${displayValStr}</div>
+        `;
+        rowDiv.appendChild(keyDiv);
+      });
+      qwertyHeatmapGrid.appendChild(rowDiv);
+    });
+
+    // --- SORT & RENDER COMPACT 2-COLUMN LIST TELEMETRY ---
+    if (sortBy === 'latency-desc') processedKeys.sort((a, b) => b.avgHold - a.avgHold);
+    else if (sortBy === 'strike-desc') processedKeys.sort((a, b) => b.avgStrikeLatency - a.avgStrikeLatency);
     else if (sortBy === 'acc-desc') processedKeys.sort((a, b) => b.macroAcc - a.macroAcc);
     else processedKeys.sort((a, b) => a.char.localeCompare(b.char));
 
     if (processedKeys.length === 0) {
-      analyticsKeysContainer.innerHTML = '<div style="color:#555; text-align:center; margin-top:50px;">No telemetry records match this time frame.</div>';
+      analyticsKeysListContainer.innerHTML = '<div style="color:#555; text-align:center; margin-top:20px;">No telemetry records match this time frame.</div>';
       return;
     }
 
@@ -909,26 +1098,51 @@ function importWordBankJSON() {
       if (item.macroAcc < 85) accColor = '#ff3366';
       else if (item.macroAcc < 95) accColor = '#ffaa00';
 
+      let holdDisplay = `[Base: ${item.totalHolds}/50]`;
+      if (item.totalHolds >= 50) {
+        holdDisplay = `${Math.round(item.avgHold)}ms`;
+      }
+
+      let strikeDisplay = `[Base: ${item.totalStrikes}/50]`;
+      if (item.totalStrikes >= 50) {
+        strikeDisplay = `${Math.round(item.avgStrikeLatency)}ms`;
+      }
+
       const card = document.createElement('div');
       card.className = 'macro-card';
       card.innerHTML = `
-        <div class="macro-card-header">
-          <span style="font-weight:bold; color:#fff; font-size:14px;">Key: [${item.char.toUpperCase()}]</span>
-          <span style="color:${accColor}; font-weight:bold;">${item.macroAcc.toFixed(1)}% Macro Acc</span>
-        </div>
-        <div style="display:flex; justify-content:space-between; color:#888;">
-          <span>Strikes: <strong style="color:#eee;">${item.totalAttempts}</strong></span>
-          <span>Latency: <strong style="color:#eee;">${item.avgLatency > 0 ? Math.round(item.avgLatency) + 'ms' : 'N/A'}</strong></span>
+        <div class="macro-card-key">${item.char.toUpperCase()}</div>
+        <div class="macro-card-metrics">
+          <div class="metric-item">
+            <span class="metric-label">Acc</span>
+            <span class="metric-val" style="color:${accColor}">${item.macroAcc.toFixed(1)}%</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Strike</span>
+            <span class="metric-val">${strikeDisplay}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Hold</span>
+            <span class="metric-val">${holdDisplay}</span>
+          </div>
+          <div class="metric-item">
+            <span class="metric-label">Hits</span>
+            <span class="metric-val">${item.totalAttempts}</span>
+          </div>
         </div>
       `;
       grid.appendChild(card);
     });
-    analyticsKeysContainer.appendChild(grid);
+    analyticsKeysListContainer.appendChild(grid);
   }
 
   function wipeSavedHistory() {
-    if (confirm("Permanently wipe your historical improvements dossier and letter strike speed logs?")) {
+    if (confirm("Permanently wipe historical telemetry and baseline hold duration logs?")) {
       localStorage.removeItem('reflex_history_v3');
+      globalHoldBaselines = {};
+      for (let char of alphabet) { globalHoldBaselines[char] = []; }
+      saveHoldBaselines();
+
       if (currentDossierTab === 'runs') displayAnalyticsHistory();
       else displayKeyTelemetryTrends();
     }
@@ -989,28 +1203,29 @@ function importWordBankJSON() {
     return (60000 / (wpm * 5)) * targetLength;
   }
 
-  // --- LIVE SESSION DATA MATRIX ---
   function renderMatrix() {
     accuracyMatrix.innerHTML = '';
     for (let char of alphabet) {
       const data = letterMetrics[char] || { total: 0, errors: 0 };
       let cellClass = '';
-      let displayPct = '---';
+      let displayVal = '---';
+
       if (data.total > 0) {
         const pct = ((data.total - data.errors) / data.total) * 100;
-        displayPct = `${Math.round(pct)}%`;
+        displayVal = `${pct.toFixed(1)}%`;
+        
         if (pct === 100) cellClass = 'perfect';
         else if (pct >= 85) cellClass = 'warn';
         else cellClass = 'critical';
       }
+
       const cell = document.createElement('div');
       cell.className = `matrix-cell ${cellClass}`;
-      cell.innerHTML = `<strong>${char}</strong>: ${displayPct}`;
+      cell.innerHTML = `<strong>${char.toUpperCase()}</strong>: ${displayVal}`;
       accuracyMatrix.appendChild(cell);
     }
   }
 
-  // --- CORE SYSTEM TRAINING LOOP ENGINE ---
   function nextWord() {
     inputField.value = '';
     clearTimeout(timerTimeout);
@@ -1019,6 +1234,9 @@ function importWordBankJSON() {
     isPaused = false;
     displayBox.className = ''; 
     pauseSentinel.style.visibility = 'hidden';
+    pauseBtn.innerText = "Pause Session";
+    pauseBtn.style.borderColor = "#00ffcc";
+    pauseBtn.style.color = "#00ffcc";
     inputField.disabled = false;
 
     if (activeMode === "letters") {
@@ -1026,7 +1244,7 @@ function importWordBankJSON() {
       currentTarget = { display: randomChar, expected: randomChar };
     } else {
       if (masterPool.length === 0) {
-        alert("The designated word bank target pool is empty. Check configuration registry values.");
+        alert("The designated word bank target pool is empty.");
         archiveAndReturn();
         return;
       }
@@ -1081,12 +1299,18 @@ function importWordBankJSON() {
       timerBar.style.width = window.getComputedStyle(timerBar).width;
       displayBox.className = 'paused-display';
       pauseSentinel.style.visibility = 'visible';
+      pauseBtn.innerText = "Resume Session";
+      pauseBtn.style.borderColor = "#ffaa00";
+      pauseBtn.style.color = "#ffaa00";
       dossierToggleBtn.style.display = 'inline-block';
       inputField.disabled = true;
     } else {
       isPaused = false;
       displayBox.className = '';
       pauseSentinel.style.visibility = 'hidden';
+      pauseBtn.innerText = "Pause Session";
+      pauseBtn.style.borderColor = "#00ffcc";
+      pauseBtn.style.color = "#00ffcc";
       dossierToggleBtn.style.display = 'none';
       analyticsOverlay.style.display = 'none';
       inputField.disabled = false;
@@ -1120,8 +1344,13 @@ function importWordBankJSON() {
     if (e.key.length !== 1 || e.ctrlKey || e.altKey) return;
 
     const pressedKey = e.key.toLowerCase();
-    const expectedChar = currentTarget.expected[inputField.value.length];
     const hitTime = Date.now();
+
+    if (!activeKeyDownTimes[pressedKey]) {
+      activeKeyDownTimes[pressedKey] = hitTime;
+    }
+
+    const expectedChar = currentTarget.expected[inputField.value.length];
 
     if (expectedChar && letterMetrics[expectedChar]) letterMetrics[expectedChar].total++;
     totalKeystrokes++;
@@ -1144,6 +1373,24 @@ function importWordBankJSON() {
       lastKeystrokeTimestamp = hitTime; 
       accuracyVal.innerText = `${(((totalKeystrokes - incorrectKeystrokes) / totalKeystrokes) * 100).toFixed(1)}%`;
       if (activeMode === "letters" && pressedKey === currentTarget.expected) executeSuccess();
+    }
+  });
+
+  window.addEventListener('keyup', (e) => {
+    if (trainingArena.style.display !== 'block') return;
+    const releasedKey = e.key.toLowerCase();
+
+    if (activeKeyDownTimes[releasedKey]) {
+      const holdDuration = Date.now() - activeKeyDownTimes[releasedKey];
+      delete activeKeyDownTimes[releasedKey];
+
+      if (alphabet.includes(releasedKey)) {
+        if (!globalHoldBaselines[releasedKey]) {
+          globalHoldBaselines[releasedKey] = [];
+        }
+        globalHoldBaselines[releasedKey].push(holdDuration);
+        saveHoldBaselines();
+      }
     }
   });
 
@@ -1181,8 +1428,8 @@ function importWordBankJSON() {
       prepareActivePool(useFilters);
       if (masterPool.length === 0) {
         alert(useFilters ? 
-          "Your filtering parameters match zero entries. Refine target constraints." : 
-          "Your global word bank is completely empty. Add entries inside the manager first.");
+          "Your filtering parameters match zero entries." : 
+          "Your global word bank is empty.");
         return;
       }
     }
