@@ -205,7 +205,7 @@
   .matrix-cell.critical { color: #ff3366; }
 
   #error-log { margin-top: 15px; font-size: 12px; color: #ff5555; text-align: left; padding: 5px; background: #151515; border-radius: 4px; min-height: 18px; }
-  .nav-btn { background: #222; color: #888; border: 1px solid #333; padding: 6px 12px; font-size: 11px; cursor: pointer; margin-top: 20px; border-radius: 4px; display: inline-block; }
+  .nav-btn { background: #222; color: #888; border: 1px solid #333; padding: 8px 16px; font-size: 12px; cursor: pointer; margin-top: 20px; border-radius: 4px; display: inline-block; }
   .nav-btn:hover { color: #fff; border-color: #505050; }
   #pause-sentinel { font-size: 12px; color: #00ffcc; margin-top: 10px; font-weight: bold; min-height: 15px; visibility: hidden; }
 
@@ -226,62 +226,68 @@
     z-index: 100;
     overflow-y: auto;
   }
-  .view-tab-btn { background: #1c1c1c; color: #666; border: 1px solid #333; padding: 6px 12px; font-size: 11px; cursor: pointer; font-family: monospace; }
+  .view-tab-btn { background: #1c1c1c; color: #666; border: 1px solid #333; padding: 8px 16px; font-size: 13px; cursor: pointer; font-family: monospace; border-radius: 4px; }
   .view-tab-btn.active { background: #252525; color: #00ffcc; border-color: #00ffcc; }
-  .history-log-row { font-size: 12px; border-bottom: 1px solid #222; padding: 8px 0; display: flex; justify-content: space-between; color: #ccc; }
+  .history-log-row { font-size: 13px; border-bottom: 1px solid #222; padding: 10px 0; display: flex; justify-content: space-between; color: #ccc; }
   .history-timestamp { color: #666; }
   .history-pct { font-weight: bold; }
   .history-pct.good { color: #00ffcc; }
   .history-pct.mid { color: #ffaa00; }
   .history-pct.low { color: #ff3366; }
 
-  /* TIGHTENED 2-COLUMN MACRO GRID LISTINGS */
-  .macro-card {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start; /* Brings key and metrics next to each other */
-    gap: 20px;                   /* Clean, controlled space between letter and metrics */
-    padding: 10px 14px;
+  /* SINGLE COLUMN MACRO GRID WITH SCALED READABILITY */
+  .macro-grid { 
+    display: grid; 
+    grid-template-columns: 1fr; 
+    gap: 12px; 
+  }
+  .macro-card { 
+    background: #161616; 
+    border: 1px solid #282828; 
+    padding: 14px 20px; 
+    border-radius: 6px; 
+    display: flex; 
+    align-items: center; 
+    gap: 24px;
   }
   .macro-card:hover { border-color: #383838; }
-  
   .macro-card-key {
-    font-size: 18px;             /* Slightly larger key badge to match new text scale */
+    font-size: 20px;
     font-weight: bold;
     color: #fff;
     background: #222;
     border: 1px solid #444;
-    padding: 6px 12px;
-    border-radius: 4px;
-    min-width: 24px;
+    padding: 8px 16px;
+    border-radius: 6px;
+    min-width: 32px;
     text-align: center;
+    flex-shrink: 0;
   }
-  
   .macro-card-metrics {
     display: flex;
-    gap: 24px;                   /* Spacing between different metric columns */
+    gap: 40px;
     align-items: center;
   }
-  
   .metric-item {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;     /* Left-aligns labels with values for easier scanning */
+    align-items: center;
+    min-width: 90px;
   }
-  
   .metric-label {
-    font-size: 10px;             /* Bumped up from 8px for clear legibility */
-    color: #888;                 /* Brighter contrast against dark background */
+    font-size: 11px;
+    color: #777;
     text-transform: uppercase;
-    margin-bottom: 3px;
-    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    letter-spacing: 0.8px;
+    text-align: center;
   }
-  
   .metric-val {
-    font-size: 15px;             /* Bumped up from 12px so numbers pop */
+    font-size: 16px;
     font-weight: bold;
     color: #eee;
-    font-family: monospace;       /* Monospace keeps numbers aligned neatly */
+    text-align: center;
+    font-family: monospace;
   }
   
   /* COMPACT DANGER BUTTON */
@@ -290,8 +296,8 @@
     background: #222; 
     color: #ff3366; 
     border: 1px solid #443333; 
-    padding: 5px 12px; 
-    font-size: 11px; 
+    padding: 8px 16px; 
+    font-size: 12px; 
     cursor: pointer; 
     border-radius: 4px;
   }
@@ -305,30 +311,30 @@
     background: #141414;
     border: 1px solid #282828;
     border-radius: 6px;
-    padding: 16px;
+    padding: 20px;
     margin-bottom: 20px;
   }
   .heatmap-legend {
     display: flex;
     justify-content: space-between;
-    font-size: 11px;
+    font-size: 13px;
     color: #888;
-    margin-bottom: 12px;
+    margin-bottom: 16px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
   .qwerty-row {
     display: flex;
     justify-content: center;
-    gap: 6px;
-    margin-bottom: 6px;
+    gap: 8px;
+    margin-bottom: 8px;
   }
   .qwerty-key {
     background: #1e1e1e;
     border: 1px solid #333;
-    border-radius: 5px;
-    width: 54px;
-    height: 54px;
+    border-radius: 6px;
+    width: 68px;
+    height: 68px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -337,14 +343,14 @@
     transition: all 0.2s ease;
   }
   .qwerty-key-cap {
-    font-size: 13px;
+    font-size: 16px;
     font-weight: bold;
     color: #eee;
     line-height: 1;
   }
   .qwerty-key-val {
-    font-size: 10px;
-    margin-top: 4px;
+    font-size: 12px;
+    margin-top: 6px;
     line-height: 1;
     color: #888;
   }
@@ -495,7 +501,7 @@
 <!-- LIVE DRILL ARENA SCREEN -->
 <div id="training-arena">
   <div id="analytics-overlay">
-    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 8px; margin-bottom: 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 12px; margin-bottom: 20px;">
       <div>
         <button id="tab-runs" class="view-tab-btn active" onclick="switchDossierTab('runs')">RUN HISTORY</button>
         <button id="tab-keys" class="view-tab-btn" onclick="switchDossierTab('keys')">ADVANCED KEY TELEMETRY</button>
@@ -503,10 +509,10 @@
       <button class="danger-btn" onclick="wipeSavedHistory()">Wipe Data</button>
     </div>
 
-    <div class="telemetry-filters" style="margin-bottom: 15px; display: none; gap: 15px; background: #1a1a1a; padding: 10px; border-radius: 4px; border: 1px solid #333;">
+    <div class="telemetry-filters" style="margin-bottom: 20px; display: none; gap: 15px; background: #1a1a1a; padding: 12px; border-radius: 4px; border: 1px solid #333;">
       <div style="display: flex; flex-direction: column; gap: 4px;">
         <label for="timePeriod" style="font-size: 11px; margin-bottom: 0;">Time Period:</label>
-        <select id="timePeriod" onchange="displayKeyTelemetryTrends()" style="padding: 4px 8px; margin-bottom: 0; font-size: 12px; width: auto;">
+        <select id="timePeriod" onchange="displayKeyTelemetryTrends()" style="padding: 6px 10px; margin-bottom: 0; font-size: 12px; width: auto;">
           <option value="all">All Time</option>
           <option value="24h">Past 24 Hours</option>
           <option value="7d">Past 7 Days</option>
@@ -515,7 +521,7 @@
       </div>
       <div style="display: flex; flex-direction: column; gap: 4px;">
         <label for="sortBy" style="font-size: 11px; margin-bottom: 0;">Sort / Heat Map View:</label>
-        <select id="sortBy" onchange="displayKeyTelemetryTrends()" style="padding: 4px 8px; margin-bottom: 0; font-size: 12px; width: auto;">
+        <select id="sortBy" onchange="displayKeyTelemetryTrends()" style="padding: 6px 10px; margin-bottom: 0; font-size: 12px; width: auto;">
           <option value="key">Key (A-Z)</option>
           <option value="acc-desc">Macro Accuracy (High to Low)</option>
           <option value="strike-desc">Strike Latency (High to Low)</option>
@@ -537,11 +543,11 @@
       </div>
 
       <!-- Preserved & Refined List Form Container -->
-      <div id="analytics-keys-list-container" style="max-height: 260px; overflow-y: auto; margin-bottom: 15px;"></div>
+      <div id="analytics-keys-list-container" style="max-height: 280px; overflow-y: auto; margin-bottom: 15px;"></div>
     </div>
 
-    <div style="text-align: right;">
-      <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="margin-top: 0; border-color:#00ffcc; color:#00ffcc;">[Close]</div>
+    <div style="text-align: right; margin-top: 15px;">
+      <div id="dossier-close-btn" class="nav-btn" onclick="closeAnalyticsView()" style="margin-top: 0; border-color:#00ffcc; color:#00ffcc; font-size: 13px; padding: 10px 20px;">[Close]</div>
     </div>
   </div>
 
@@ -562,7 +568,7 @@
   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
     <div class="nav-btn" onclick="archiveAndReturn()" style="margin-top: 0;">[ESC] Save Run & Exit</div>
     <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none; margin-top: 0;">View Macro Metrics</div>
-    <button id="pause-btn" onclick="togglePause()" style="width: auto; background: #222; color: #00ffcc; border: 1px solid #00ffcc; padding: 6px 16px; font-size: 11px;">Pause Session</button>
+    <button id="pause-btn" onclick="togglePause()" style="width: auto; background: #222; color: #00ffcc; border: 1px solid #00ffcc; padding: 8px 18px; font-size: 11px;">Pause Session</button>
   </div>
 </div>
 
@@ -1081,7 +1087,7 @@
       qwertyHeatmapGrid.appendChild(rowDiv);
     });
 
-    // --- SORT & RENDER COMPACT 2-COLUMN LIST TELEMETRY ---
+    // --- SORT & RENDER SINGLE COLUMN LIST TELEMETRY ---
     if (sortBy === 'latency-desc') processedKeys.sort((a, b) => b.avgHold - a.avgHold);
     else if (sortBy === 'strike-desc') processedKeys.sort((a, b) => b.avgStrikeLatency - a.avgStrikeLatency);
     else if (sortBy === 'acc-desc') processedKeys.sort((a, b) => b.macroAcc - a.macroAcc);
