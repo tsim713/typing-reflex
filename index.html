@@ -236,50 +236,52 @@
   .history-pct.low { color: #ff3366; }
 
   /* TIGHTENED 2-COLUMN MACRO GRID LISTINGS */
-  .macro-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
-  .macro-card { 
-    background: #161616; 
-    border: 1px solid #282828; 
-    padding: 8px 12px; 
-    border-radius: 6px; 
-    font-size: 11px; 
-    display: flex; 
-    align-items: center; 
-    justify-content: flex-start;
+  .macro-card {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Brings key and metrics next to each other */
+    gap: 20px;                   /* Clean, controlled space between letter and metrics */
+    padding: 10px 14px;
   }
   .macro-card:hover { border-color: #383838; }
+  
   .macro-card-key {
-    font-size: 15px;
+    font-size: 18px;             /* Slightly larger key badge to match new text scale */
     font-weight: bold;
     color: #fff;
     background: #222;
     border: 1px solid #444;
-    padding: 4px 10px;
+    padding: 6px 12px;
     border-radius: 4px;
-    min-width: 20px;
+    min-width: 24px;
     text-align: center;
   }
+  
   .macro-card-metrics {
     display: flex;
-    gap: 14px;
+    gap: 24px;                   /* Spacing between different metric columns */
     align-items: center;
   }
+  
   .metric-item {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;     /* Left-aligns labels with values for easier scanning */
   }
+  
   .metric-label {
-    font-size: 8px;
-    color: #666;
+    font-size: 10px;             /* Bumped up from 8px for clear legibility */
+    color: #888;                 /* Brighter contrast against dark background */
     text-transform: uppercase;
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     letter-spacing: 0.5px;
   }
+  
   .metric-val {
-    font-size: 12px;
+    font-size: 15px;             /* Bumped up from 12px so numbers pop */
     font-weight: bold;
     color: #eee;
+    font-family: monospace;       /* Monospace keeps numbers aligned neatly */
   }
   
   /* COMPACT DANGER BUTTON */
