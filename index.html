@@ -178,7 +178,7 @@
   #metrics-panel { 
     margin-top: 20px; 
     display: flex; 
-    justify-content: space-around; 
+    justify-style: space-around; 
     color: #888; 
     font-size: 14px;
     border-top: 1px solid #222;
@@ -233,31 +233,45 @@
   }
   .pause-actions {
     display: flex;
-    gap: 1.5rem;
+    gap: 1rem;
     margin-top: 1.5rem;
+    justify-content: center;
   }
   .btn-resume { 
     background-color: #00ffcc; 
     color: #111; 
     border: none; 
-    padding: 12px 24px; 
+    padding: 12px 20px; 
     font-weight: bold; 
     cursor: pointer; 
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.5px;
   }
   .btn-resume:hover { background-color: #00ccaa; }
   
+  .btn-sandbox-pause {
+    background-color: #ffaa00; 
+    color: #111; 
+    border: none; 
+    padding: 12px 20px; 
+    font-weight: bold; 
+    cursor: pointer; 
+    border-radius: 4px;
+    font-size: 12px;
+    letter-spacing: 0.5px;
+  }
+  .btn-sandbox-pause:hover { background-color: #e09600; }
+
   .btn-danger-pause { 
     background-color: #d9534f; 
     color: #fff; 
     border: none; 
-    padding: 12px 24px; 
+    padding: 12px 20px; 
     font-weight: bold; 
     cursor: pointer; 
     border-radius: 4px;
-    font-size: 13px;
+    font-size: 12px;
     letter-spacing: 0.5px;
   }
   .btn-danger-pause:hover { background-color: #c9302c; }
@@ -274,6 +288,11 @@
     letter-spacing: 0.5px;
   }
   .btn-resume kbd {
+    background: rgba(0, 0, 0, 0.18);
+    color: #111;
+    border: 1px solid rgba(0, 0, 0, 0.4);
+  }
+  .btn-sandbox-pause kbd {
     background: rgba(0, 0, 0, 0.18);
     color: #111;
     border: 1px solid rgba(0, 0, 0, 0.4);
@@ -463,8 +482,9 @@
     </div>
   </div>
 
-  <button id="action-launch-btn" onclick="handleMainLaunchTrigger()" style="font-size: 13px; height: 45px; margin-bottom: 12px;">Launch Drill Loop with Filtered Set</button>
-  <button id="action-launch-full-btn" onclick="startTraining(false)" style="font-size: 12px; height: 40px; margin-bottom: 25px; background: #222; color: #aaa; border: 1px solid #444;">Launch Full Bank Drill (No Filters)</button>
+  <button id="action-launch-btn" onclick="handleMainLaunchTrigger()" style="font-size: 13px; height: 45px; margin-bottom: 12px;">Launch Filtered Drill</button>
+  <button id="action-launch-full-btn" onclick="startTraining('words', false)" style="font-size: 12px; height: 40px; margin-bottom: 12px; background: #222; color: #aaa; border: 1px solid #444;">Launch Full Bank Drill (No Filters)</button>
+  <button id="action-launch-sandbox-btn" onclick="startAdaptiveSandbox()" style="font-size: 12px; height: 40px; margin-bottom: 25px; background: #2a2200; color: #ffaa00; border: 1px solid #ffaa00;">Launch Adaptive Sandbox Drill (Untimed)</button>
   
   <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
     <button onclick="toggleWordManagerOverlay(true)" style="background:#1c1c1c; color:#00ffcc; border:1px solid #00ffcc; padding: 10px 0;">Manage Word Bank</button>
@@ -657,12 +677,24 @@
   
   <!-- BOTTOM CONTROL BAR -->
   <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+    <!-- STANDARD DRILL PAUSE BUTTON -->
     <button id="pause-btn" onclick="openPauseMenu()" style="width: auto; background: #3a3a3c; color: #fff; padding: 10px 20px; border-radius: 4px; border: 1px solid #555; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
       <kbd>ESC</kbd> Pause Session
     </button>
+
+    <!-- SANDBOX MODE EXCLUSIVE HOME BUTTON -->
+    <button id="sandbox-home-btn" onclick="archiveAndReturn()" style="display: none; width: auto; background: #00ffcc; color: #111; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
+      Return to Home
+    </button>
     
+    <!-- UNTIMED SANDBOX TRIGGER -->
+    <button id="sandbox-trigger-btn" onclick="startAdaptiveSandbox()" style="width: auto; background: #2a2200; color: #ffaa00; border: 1px solid #ffaa00; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
+      Adaptive Sandbox (Untimed)
+    </button>
+
     <div class="nav-btn" id="dossier-toggle-btn" onclick="toggleAnalyticsView(true)" style="border-color: #00ffcc; color: #00ffcc; display: none;">View Macro Metrics</div>
 
+    <!-- STANDARD DRILL SAVE & EXIT BUTTON -->
     <button id="exit-btn" onclick="archiveAndReturn()" style="width: auto; background: #d9534f; color: #fff; padding: 10px 20px; border-radius: 4px; border: none; cursor: pointer; font-family: monospace; font-size: 12px; font-weight: bold;">
       Save Run and Exit
     </button>
@@ -677,11 +709,15 @@
 
     <div class="pause-actions">
       <button id="resume-btn" class="btn-resume" onclick="resumeSession()">
-        <kbd>CTRL</kbd> Resume Session
+        <kbd>CTRL</kbd> Resume
+      </button>
+
+      <button onclick="startAdaptiveSandbox()" class="btn-sandbox-pause">
+        Adaptive Sandbox (Untimed)
       </button>
 
       <button id="save-exit-btn" class="btn-danger-pause" onclick="saveRunAndExit()">
-        <kbd>ESC</kbd> Save Run & Exit
+        <kbd>ESC</kbd> Save & Exit
       </button>
     </div>
   </div>
@@ -709,6 +745,7 @@
   let isTransitioning = false; 
   let activeMode = "words";
   
+  let isSandboxMode = false;
   let isArmed = false;
   let isPaused = false;
   let launchedFromHome = false;
@@ -738,7 +775,13 @@
   const modeSelect = document.getElementById('mode-select');
   const actionLaunchBtn = document.getElementById('action-launch-btn');
   const actionLaunchFullBtn = document.getElementById('action-launch-full-btn');
+  const actionLaunchSandboxBtn = document.getElementById('action-launch-sandbox-btn');
   
+  const pauseBtn = document.getElementById('pause-btn');
+  const exitBtn = document.getElementById('exit-btn');
+  const sandboxHomeBtn = document.getElementById('sandbox-home-btn');
+  const sandboxTriggerBtn = document.getElementById('sandbox-trigger-btn');
+
   const accuracyVal = document.getElementById('accuracy-val');
   const countVal = document.getElementById('count-val');
   const errorLog = document.getElementById('error-log');
@@ -1009,7 +1052,7 @@
   }
 
   function saveSessionToHistory() {
-    if (targetsCompleted === 0) return;
+    if (targetsCompleted === 0 || isSandboxMode) return;
     try {
       const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
       const finalAccuracy = totalKeystrokes > 0 ? ((totalKeystrokes - incorrectKeystrokes) / totalKeystrokes) * 100 : 100;
@@ -1030,9 +1073,12 @@
         }
       }
 
+      let modeLabel = 'Mask Pairs';
+      if (activeMode === 'letters') modeLabel = 'Reflex Letters';
+
       const entry = {
         timestamp: new Date().toLocaleString(),
-        mode: activeMode === 'letters' ? 'Reflex Letters' : 'Mask Pairs',
+        mode: modeLabel,
         wpm: wpmInput.value,
         accuracy: finalAccuracy.toFixed(1),
         hits: targetsCompleted,
@@ -1042,6 +1088,102 @@
       history.unshift(entry);
       localStorage.setItem('reflex_history_v3', JSON.stringify(history));
     } catch(e) { console.error(e); }
+  }
+
+  /* ADAPTIVE UNRANKED SANDBOX ENGINE LOGIC */
+  function getAdaptiveTargetKeys() {
+    const history = JSON.parse(localStorage.getItem('reflex_history_v3') || '[]');
+    if (history.length === 0) return alphabet.split('');
+
+    const lastRun = history[0];
+    const letterData = lastRun.letterData || {};
+    const scores = [];
+
+    for (let char of alphabet) {
+      const stats = letterData[char] || { total: 0, errors: 0, latencies: [] };
+      const holds = globalHoldBaselines[char] || [];
+
+      const errors = stats.errors || 0;
+      const avgStrike = stats.latencies.length > 0 
+        ? (stats.latencies.reduce((a, b) => a + b, 0) / stats.latencies.length) 
+        : 0;
+      const avgHold = holds.length > 0 
+        ? (holds.reduce((a, b) => a + b, 0) / holds.length) 
+        : 0;
+
+      // Weight Score Formula: (Errors * 3.0) + (Strike Latency / 100) + (Hold Duration / 50)
+      const weight = (errors * 3.0) + (avgStrike / 100) + (avgHold / 50);
+
+      if (weight > 0) {
+        scores.push({ char, weight });
+      }
+    }
+
+    scores.sort((a, b) => b.weight - a.weight);
+
+    // Extract Top 10 Weakest Target Keys
+    if (scores.length < 5) return ['q', 'z', 'p', 'x', 'b', 'j', 'k', 'v', 'y', 'w'];
+    return scores.slice(0, 10).map(item => item.char);
+  }
+
+  function startAdaptiveSandbox() {
+    if (trainingArena.style.display === 'block' && !isSandboxMode) {
+      saveSessionToHistory();
+    }
+
+    const weakKeys = getAdaptiveTargetKeys();
+    isSandboxMode = true; 
+    masterPool = [];
+
+    if (activeMode === 'letters') {
+      alphabet.split('').forEach(char => {
+        masterPool.push({ display: char, expected: char });
+      });
+      weakKeys.slice(0, 10).forEach(char => {
+        for (let i = 0; i < 5; i++) {
+          masterPool.push({ display: char, expected: char });
+        }
+      });
+    } else {
+      wordBank.forEach(pair => {
+        masterPool.push({ display: pair.word, expected: pair.word });
+        masterPool.push({ display: pair.mask, expected: pair.word });
+      });
+
+      const matchingWords = wordBank.filter(item => 
+        weakKeys.slice(0, 10).some(k => item.word.includes(k) || (item.targets && item.targets.includes(k)))
+      );
+
+      matchingWords.forEach(pair => {
+        for (let i = 0; i < 3; i++) {
+          masterPool.push({ display: pair.word, expected: pair.word });
+          masterPool.push({ display: pair.mask, expected: pair.word });
+        }
+      });
+    }
+
+    resetSessionMetrics();
+    renderMatrix();
+
+    // UPDATE CONTROL BAR BUTTONS FOR SANDBOX MODE
+    pauseBtn.style.display = 'none';
+    exitBtn.style.display = 'none';
+    sandboxTriggerBtn.style.display = 'none';
+    sandboxHomeBtn.style.display = 'inline-block';
+
+    pauseSentinel.style.visibility = 'visible';
+    pauseSentinel.innerText = `UNRANKED SANDBOX: Focus Targets [${weakKeys.slice(0, 10).join(', ').toUpperCase()}] — Spacebar to Begin`;
+
+    setupPanel.style.display = 'none';
+    wordManagerOverlay.style.display = 'none';
+    analyticsOverlay.style.display = 'none';
+    pauseOverlay.classList.add('hidden');
+    trainingArena.style.display = 'block';
+
+    isArmed = true;
+    displayBox.innerText = "SANDBOX";
+    displayBox.className = "paused-display";
+    inputField.disabled = true;
   }
 
   function switchDossierTab(tab) {
@@ -1347,11 +1489,7 @@
   }
 
   function handleMainLaunchTrigger() {
-    if (modeSelect.value === "letters") {
-      startTraining(false);
-    } else {
-      startTraining(true);
-    }
+    startTraining(modeSelect.value, true);
   }
 
   function calculateWindow(targetLength) {
@@ -1393,7 +1531,7 @@
     pauseOverlay.classList.add('hidden');
     inputField.disabled = false;
 
-    if (activeMode === "letters") {
+    if (activeMode === "letters" && !isSandboxMode) {
       const randomChar = alphabet[Math.floor(Math.random() * alphabet.length)];
       currentTarget = { display: randomChar, expected: randomChar };
     } else {
@@ -1406,14 +1544,19 @@
     }
     
     displayBox.innerText = currentTarget.display;
-    timeWindowAllocated = calculateWindow(currentTarget.expected.length);
     timeTargetStarted = Date.now();
     lastKeystrokeTimestamp = timeTargetStarted; 
     
-    executeTimerAnimation(timeWindowAllocated);
+    if (isSandboxMode) {
+      timerBar.style.transition = 'none';
+      timerBar.style.width = '100%';
+    } else {
+      timeWindowAllocated = calculateWindow(currentTarget.expected.length);
+      executeTimerAnimation(timeWindowAllocated);
+      timerTimeout = setTimeout(() => { triggerTimeoutFailure(); }, timeWindowAllocated);
+    }
+    
     inputField.focus();
-
-    timerTimeout = setTimeout(() => { triggerTimeoutFailure(); }, timeWindowAllocated);
   }
 
   function executeTimerAnimation(durationMs) {
@@ -1444,7 +1587,7 @@
 
   /* PAUSE LOGIC */
   function openPauseMenu() {
-    if (isTransitioning || launchedFromHome || isArmed) return;
+    if (isTransitioning || launchedFromHome || isArmed || isSandboxMode) return;
     isPaused = true;
     clearTimeout(timerTimeout);
     
@@ -1467,18 +1610,27 @@
     pauseOverlay.classList.add('hidden');
     inputField.disabled = true;
 
-    displayBox.innerText = "READY";
+    displayBox.innerText = isSandboxMode ? "SANDBOX" : "READY";
     displayBox.className = "paused-display";
     pauseSentinel.style.visibility = 'visible';
-    pauseSentinel.innerText = "SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN";
+    if (!isSandboxMode) {
+      pauseSentinel.innerText = "SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN";
+    }
   }
 
   function saveRunAndExit() {
     archiveAndReturn();
   }
 
-  /* KEYBOARD INPUT INTERCEPTOR */
+  /* GLOBAL KEYBOARD INTERCEPTOR & NAVIGATION SHORTCUTS */
   document.addEventListener('keydown', (event) => {
+    // GLOBAL SHORTCUT: Ctrl + Esc cleanly returns home from ANY page, overlay, or mode
+    if (event.ctrlKey && event.key === 'Escape') {
+      event.preventDefault();
+      archiveAndReturn();
+      return;
+    }
+
     if (trainingArena.style.display !== 'block') return;
 
     if (event.code === 'Space' && isArmed) {
@@ -1494,7 +1646,7 @@
     if (isArmed) return;
 
     if (!isPaused) {
-      if (event.key === 'Escape') {
+      if (event.key === 'Escape' && !isSandboxMode) {
         event.preventDefault();
         openPauseMenu();
       }
@@ -1548,8 +1700,9 @@
     }
   });
 
+  /* GUARDED KEYUP LISTENER FOR ZERO TELEMETRY IN SANDBOX */
   window.addEventListener('keyup', (e) => {
-    if (trainingArena.style.display !== 'block') return;
+    if (trainingArena.style.display !== 'block' || isSandboxMode) return;
     const releasedKey = e.key.toLowerCase();
 
     if (activeKeyDownTimes[releasedKey]) {
@@ -1584,10 +1737,23 @@
   function archiveAndReturn() {
     clearTimeout(timerTimeout);
     clearTimeout(transitionTimeout);
-    saveSessionToHistory(); 
+    
+    if (!isSandboxMode) {
+      saveSessionToHistory(); 
+    }
+
+    isSandboxMode = false;
     isArmed = false;
     isPaused = false;
     launchedFromHome = false;
+
+    // RESTORE STANDARD CONTROL BAR BUTTON VISIBILITIES
+    pauseBtn.style.display = 'inline-block';
+    exitBtn.style.display = 'inline-block';
+    sandboxTriggerBtn.style.display = 'inline-block';
+    sandboxHomeBtn.style.display = 'none';
+
+    wordManagerOverlay.style.display = 'none';
     pauseOverlay.classList.add('hidden');
     analyticsOverlay.style.display = 'none';
     dossierToggleBtn.style.display = 'none';
@@ -1596,8 +1762,22 @@
     updateLaunchButtonLabel();
   }
 
-  function startTraining(useFilters = true) {
-    activeMode = modeSelect.value;
+  function startTraining(modeSelected = "words", useFilters = true) {
+    if (trainingArena.style.display === 'block' && !isSandboxMode) {
+      saveSessionToHistory();
+    }
+
+    activeMode = modeSelected || modeSelect.value;
+    modeSelect.value = activeMode;
+
+    isSandboxMode = false;
+
+    // ENSURE STANDARD DRILL BUTTONS ARE SHOWN
+    pauseBtn.style.display = 'inline-block';
+    exitBtn.style.display = 'inline-block';
+    sandboxTriggerBtn.style.display = 'inline-block';
+    sandboxHomeBtn.style.display = 'none';
+
     if (activeMode === "words") {
       prepareActivePool(useFilters);
       if (masterPool.length === 0) {
@@ -1607,6 +1787,7 @@
         return;
       }
     }
+
     resetSessionMetrics();
     renderMatrix();
     setupPanel.style.display = 'none';
@@ -1618,6 +1799,7 @@
     displayBox.className = "paused-display";
     pauseSentinel.style.visibility = 'visible';
     pauseSentinel.innerText = "SET HANDS ON HOME ROW — PRESS SPACEBAR TO BEGIN";
+    pauseOverlay.classList.add('hidden');
     inputField.disabled = true;
   }
 
